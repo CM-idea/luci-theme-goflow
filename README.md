@@ -81,5 +81,5 @@ Apache-2.0，详见 [LICENSE](LICENSE)。部分 ucode 模板和 CSS 选择器结
 ## 致谢
 
 - 原作者 **Dursun Tokgoz** 创作了 Gökçe 主题：[luci-theme-gokce](https://github.com/dursuntokgoz/luci-theme-gokce)
-- 登录页面设计参考自 **eamonxg** 的 [luci-theme-outline](https://github.com/eamonxg/luci-theme-outline)（Copyright 2025 eamonxg）
+- 登录页面设计参考自 **tickcount** 的 [luci-theme](https://github.com/tickcount/luci-theme)
 - `luci-theme-bootstrap`：LuCI Team（Apache-2.0）
