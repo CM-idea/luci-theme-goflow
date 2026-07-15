@@ -3,9 +3,6 @@
  Copyright 2026 Dursun Tokgoz
  Licensed under the Apache License 2.0.
 
- 登录页面设计参考自 luci-theme-outline (Copyright 2025 eamonxg)
- -#}
-
 {%const boardinfo = ubus.call('system', 'board');-%}
 {% include('header', { blank_page: true }) %}
 
