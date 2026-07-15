@@ -1,9 +1,9 @@
 name: Build
 
 # luci-theme-goflow 的 LUCI_PKGARCH=all（纯模板/CSS/JS，无编译代码），
-# 所有架构产出的 .apk 字节完全一致。
+# 所有架构产出的 .ipk 字节完全一致。
 # 选择 aarch64_cortex-a53 对应 GL.iNet AX1800 (IPQ6000) 的 CPU 架构。
-# OpenWrt 25.12+ 使用 apk 包管理器，产出 .apk 格式。
+# 构建 24.10 版本产出 opkg 兼容的 .ipk。
 
 env:
   PACKAGE: luci-theme-goflow
@@ -26,7 +26,7 @@ permissions:
 
 jobs:
   build:
-    name: OpenWrt 25.12 / aarch64_cortex-a53
+    name: OpenWrt 24.10 / aarch64_cortex-a53
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -36,7 +36,7 @@ jobs:
       - name: Build package with OpenWrt SDK
         uses: openwrt/gh-action-sdk@main
         env:
-          ARCH: aarch64_cortex-a53-25.12.5
+          ARCH: aarch64_cortex-a53-24.10
           FEEDNAME: ${{ env.FEEDNAME }}
           PACKAGES: ${{ env.PACKAGE }}
           V: s
@@ -46,11 +46,11 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p dist
-          find "$GITHUB_WORKSPACE/bin" -type f \( -name "${PACKAGE}_*_all.ipk" -o -name "${PACKAGE}-*.apk" \) -print -exec cp -v {} dist/ \;
+          find "$GITHUB_WORKSPACE/bin" -type f -name "${PACKAGE}_*_all.ipk" -print -exec cp -v {} dist/ \;
           echo "Built packages:"
           find dist -maxdepth 1 -type f -printf '%f\n' | sort
-          test "$(find dist -maxdepth 1 -type f \( -name '*.ipk' -o -name '*.apk' \) | wc -l)" -ge 1 || {
-            echo "::error::No ${PACKAGE} .ipk or .apk package was produced"
+          test "$(find dist -maxdepth 1 -type f -name '*.ipk' | wc -l)" -ge 1 || {
+            echo "::error::No ${PACKAGE} .ipk package was produced"
             exit 1
           }
 
@@ -80,9 +80,9 @@ jobs:
         run: |
           set -euo pipefail
           cd artifacts
-          for f in *.apk *.ipk; do
+          for f in *.ipk; do
             [ -e "$f" ] || continue
-            mv "$f" "${PACKAGE}-${GITHUB_REF_NAME}.${f##*.}"
+            mv "$f" "${PACKAGE}-${GITHUB_REF_NAME}.ipk"
           done
           ls -la
 
