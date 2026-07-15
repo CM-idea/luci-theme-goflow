@@ -15,12 +15,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # luci-theme-goflow has LUCI_PKGARCH=all (no compiled code, only
-        # templates/CSS/JS), so the resulting .ipk/.apk is identical
-        # regardless of target - one arm64 build (matching the BPI-R4 test
-        # device) is enough; the wider x86/ARM32/SNAPSHOT matrix was dropped
-        # because it multiplied CI time for byte-identical output.
-        arch: [aarch64_generic]
+        # luci-theme-goflow 的 LUCI_PKGARCH=all（纯模板/CSS/JS，无编译代码），
+        # 所有架构产出的 .ipk/.apk 字节完全一致，只需要一个组合即可。
+        # 选择 aarch64_cortex-a53 架构。
+        arch: [aarch64_cortex-a53]
         sdk: [openwrt-25.12]
 
     steps:
@@ -52,13 +50,12 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
-      # Every matrix combo produces byte-for-byte the same package (arch=all),
-      # all under the same filename - downloading every artifact would just
-      # collide on upload. Publish the one canonical build instead.
+      # 所有矩阵组合产出完全相同的包（arch=all），文件名也一样，
+      # 下载多份只会互相覆盖。只发布一份即可。
       - name: Download canonical build artifact
         uses: actions/download-artifact@v4
         with:
-          name: luci-theme-goflow-openwrt-25.12-aarch64_generic
+          name: luci-theme-goflow-openwrt-25.12-aarch64_cortex-a53
           path: artifacts
 
       - name: Rename assets to the tag name
