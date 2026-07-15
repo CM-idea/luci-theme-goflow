@@ -213,6 +213,10 @@ hr { border: none; border-top: 1px solid var(--border-color-medium); margin: 18p
 	box-shadow: 0 4px 12px rgba(59, 110, 245, .35);
 }
 
+.sidebar__logo--custom {
+	box-shadow: none;
+}
+
 .sidebar__brand-text {
 	font-size: 16px;
 	font-weight: 700;
@@ -509,9 +513,14 @@ hr { border: none; border-top: 1px solid var(--border-color-medium); margin: 18p
 #maincontent table th,
 #maincontent table td {
 	padding: 8px 12px;
-	border: 1px solid var(--border-color-medium);
+	border-top: 1px solid var(--border-color-medium);
 	text-align: left;
 	vertical-align: middle;
+}
+
+#maincontent table tr:first-child th,
+#maincontent table tr:first-child td {
+	border-top: none;
 }
 
 #maincontent table th {
@@ -587,9 +596,17 @@ hr { border: none; border-top: 1px solid var(--border-color-medium); margin: 18p
 }
 
 .btn:hover, .cbi-button:hover, .btn:focus, .cbi-button:focus {
-	border-color: var(--primary-color-high);
-	box-shadow: 0 0 0 3px hsla(var(--border-color-low-hsl), 1);
+	background: var(--on-color, var(--primary-color-high));
+	color: #fff;
+	border-color: var(--on-color, var(--primary-color-high));
+	box-shadow: none;
 	text-decoration: none;
+}
+
+.cbi-button-negative:hover,
+.cbi-section-remove .cbi-button:hover,
+.cbi-button-reset:hover,
+.cbi-button-remove:hover {
 }
 
 .cbi-button-positive,
@@ -708,15 +725,27 @@ input, textarea, select, .cbi-select, .cbi-dropdown:not(.btn):not(.cbi-button) {
 
 input, select, .cbi-select, .cbi-dropdown:not(.btn):not(.cbi-button) { height: 34px; }
 
+select {
+	-webkit-appearance: none !important;
+	appearance: none !important;
+	padding: 4px 10px !important;
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath d='M5 7l3 3 3-3' stroke='%231C2433' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e") !important;
+	background-repeat: no-repeat !important;
+	background-position: right 10px center !important;
+	background-size: 18px !important;
+}
+
+[data-darkmode="true"] select {
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath d='M5 7l3 3 3-3' stroke='%23E7EBF4' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e") !important;
+}
+
 input:focus, textarea:focus, select:focus, .cbi-select.focus, .cbi-dropdown:focus, .cbi-dropdown[open] {
 	outline: 0;
 	border-color: var(--primary-color-high);
-	box-shadow: 0 0 0 3px rgba(var(--focus-color-rgb), .25);
 }
 
 .cbi-input-invalid:focus, .cbi-select.cbi-input-invalid, .cbi-value-error input {
 	border-color: var(--error-color-high) !important;
-	box-shadow: 0 0 0 3px rgba(var(--error-color-high-rgb), .2) !important;
 }
 
 ::placeholder { color: var(--text-color-low); }
@@ -731,6 +760,7 @@ input[type="checkbox"], input[type="radio"] {
 	appearance: none;
 	width: 18px;
 	height: 18px;
+	padding: 0;
 	border: 1px solid var(--border-color-high);
 	border-radius: 5px;
 	background: var(--background-color-high);
@@ -868,6 +898,12 @@ label[for] { cursor: pointer; }
 	border-bottom: 1px solid var(--border-color-medium);
 }
 
+.cbi-section .cbi-title + div h3 {
+	font-size: 13px;
+	font-weight: 600;
+	margin: 16px 0 12px;
+}
+
 .cbi-section .cbi-title .label {
 	font-size: 12px;
 	font-weight: 400;
@@ -988,14 +1024,27 @@ label[for] { cursor: pointer; }
 	border-top: 1px solid var(--border-color-medium);
 }
 
-.table .tr:first-child .th {
+#maincontent .table .tr:first-child .th {
 	border-top: none;
+	padding-top: 12px;
+	padding-bottom: 12px;
 	font-weight: 700;
 	font-size: 11.5px;
+	white-space: nowrap;
 	text-transform: uppercase;
 	letter-spacing: .5px;
 	color: var(--text-color-medium);
 	background: var(--background-color-medium);
+}
+
+.table .tr:first-child .th:first-child { border-radius: 10px 0 0 0; }
+.table .tr:first-child .th:last-child  { border-radius: 0 10px 0 0; }
+
+.tr.placeholder .td,
+.tr.placeholder .td em {
+	font-size: 12px;
+	font-style: normal;
+	color: var(--text-color-medium);
 }
 
 .cbi-section-table-titles.named::before,
@@ -1533,6 +1582,7 @@ body.modal-overlay-active #modal_overlay {
 	font-size: 12px;
 	line-height: 1.4;
 	white-space: nowrap;
+	min-width: 250px;
 }
 
 .network-status-table .ifacebox-body .ifacebadge {

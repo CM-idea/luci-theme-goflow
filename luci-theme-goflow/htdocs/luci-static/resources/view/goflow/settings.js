@@ -52,6 +52,14 @@ return view.extend({
 		o.default = '1';
 		o.rmempty = false;
 
+		/* ---- Logo ---- */
+		s = m.section(form.NamedSection, 'global', 'global', _('Logo'));
+		s.anonymous = true;
+
+		o = s.option(form.FileUpload, '_logo_upload', _('Custom Logo'),
+			_('Upload a custom icon to replace the sidebar logo. The glow effect will be removed automatically when a custom logo is set.'));
+		o.root_directory = '/www/luci-static/goflow/';
+
 		return m.render();
 	}
 });

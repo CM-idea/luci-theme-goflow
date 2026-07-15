@@ -9,3 +9,5 @@ config global 'global'
 	option status_bar '1'
 	# Show the dashboard menu entry
 	option dashboard '1'
+	# Custom sidebar logo (set to 1 to use uploaded custom logo)
+	option custom_logo '0'

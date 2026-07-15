@@ -12,10 +12,22 @@ var ICONS = {
 	services: 'layers',
 	vpn: 'shield',
 	firewall: 'shield',
+	istore: 'istore',
 	'goflow-dashboard': 'dashboard',
 	'goflow-stations': 'chart',
 	logout: 'logout'
 };
+
+var ORDER = [
+	'goflow-dashboard',
+	'status',
+	'system',
+	'istore',
+	'services',
+	'vpn',
+	'network',
+	'logout'
+];
 
 function iconHtml(name) {
 	var id = ICONS[name] || 'dot';
@@ -147,12 +159,21 @@ return baseclass.extend({
 	 * far bootstrap's dropdown nav descends. */
 	renderSidebarMenu(tree, url) {
 		const container = document.querySelector('#sidebar-menu');
-		const children = ui.menu.getChildren(tree);
+		var children = ui.menu.getChildren(tree);
 		const activeName = L.env.dispatchpath[1];
 		const activeSub = L.env.dispatchpath[2];
 
 		if (!container)
 			return;
+
+		/* Sort top-level menu entries in a fixed order */
+		children.sort(function(a, b) {
+			var ai = ORDER.indexOf(a.name);
+			var bi = ORDER.indexOf(b.name);
+			if (ai === -1) ai = ORDER.length;
+			if (bi === -1) bi = ORDER.length;
+			return ai - bi;
+		});
 
 		const setOpen = (group, open) => {
 			const submenu = group.querySelector('.sidebar__submenu');
