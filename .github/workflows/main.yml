@@ -1,0 +1,76 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: ${{ matrix.sdk }} / ${{ matrix.arch }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # luci-theme-goflow has LUCI_PKGARCH=all (no compiled code, only
+        # templates/CSS/JS), so the resulting .ipk/.apk is identical
+        # regardless of target - one arm64 build (matching the BPI-R4 test
+        # device) is enough; the wider x86/ARM32/SNAPSHOT matrix was dropped
+        # because it multiplied CI time for byte-identical output.
+        arch: [aarch64_generic]
+        sdk: [openwrt-25.12]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build package
+        uses: openwrt/gh-action-sdk@v11
+        env:
+          ARCH: ${{ matrix.arch }}-${{ matrix.sdk }}
+          FEEDNAME: luci_theme_goflow
+          PACKAGES: luci-theme-goflow
+          NO_REFRESH_CHECK: true
+          V: s
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: luci-theme-goflow-${{ matrix.sdk }}-${{ matrix.arch }}
+          path: |
+            bin/packages/${{ matrix.arch }}/luci_theme_goflow/*.ipk
+            bin/packages/${{ matrix.arch }}/luci_theme_goflow/*.apk
+          if-no-files-found: warn
+
+  release:
+    name: Publish release assets
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      # Every matrix combo produces byte-for-byte the same package (arch=all),
+      # all under the same filename - downloading every artifact would just
+      # collide on upload. Publish the one canonical build instead.
+      - name: Download canonical build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: luci-theme-goflow-openwrt-25.12-aarch64_generic
+          path: artifacts
+
+      - name: Rename assets to the tag name
+        run: |
+          cd artifacts
+          for f in *.apk *.ipk; do
+            [ -e "$f" ] || continue
+            mv "$f" "luci-theme-goflow-${GITHUB_REF_NAME}.${f##*.}"
+          done
+          ls -la
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*.*pk
