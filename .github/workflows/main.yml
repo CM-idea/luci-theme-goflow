@@ -17,12 +17,12 @@ jobs:
       matrix:
         # luci-theme-goflow 的 LUCI_PKGARCH=all（纯模板/CSS/JS，无编译代码），
         # 所有架构产出的 .ipk/.apk 字节完全一致，只需要一个组合即可。
-        # 选择 aarch64_cortex-a53 架构。
+        # 选择 aarch64_cortex-a53 对应 GL.iNet AX1800 (IPQ6000) 的 CPU 架构。
         arch: [aarch64_cortex-a53]
         sdk: [openwrt-25.12]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -36,7 +36,7 @@ jobs:
           V: s
 
       - name: Upload package artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: luci-theme-goflow-${{ matrix.sdk }}-${{ matrix.arch }}
           path: |
@@ -53,7 +53,7 @@ jobs:
       # 所有矩阵组合产出完全相同的包（arch=all），文件名也一样，
       # 下载多份只会互相覆盖。只发布一份即可。
       - name: Download canonical build artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: luci-theme-goflow-openwrt-25.12-aarch64_cortex-a53
           path: artifacts
@@ -68,6 +68,6 @@ jobs:
           ls -la
 
       - name: Upload to GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: artifacts/*.*pk
