@@ -36,7 +36,7 @@ jobs:
       - name: Build package with OpenWrt SDK
         uses: openwrt/gh-action-sdk@main
         env:
-          ARCH: aarch64_cortex-a53-24.10
+          ARCH: aarch64_cortex-a53-openwrt-24.10
           FEEDNAME: ${{ env.FEEDNAME }}
           PACKAGES: ${{ env.PACKAGE }}
           V: s
