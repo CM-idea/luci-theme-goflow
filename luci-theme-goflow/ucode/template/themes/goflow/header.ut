@@ -14,6 +14,7 @@
 	const boardinfo = ubus.call('system', 'board') ?? {};
 	const darkpref = (theme == 'goflow-dark' ? 'true' : (theme == 'goflow-light' ? 'false' : null));
 	const goflow_uci = uci.cursor();
+	goflow_uci.load('goflow');
 	const goflow_custom_logo = (goflow_uci.get('goflow', 'global', 'custom_logo') === '1');
 
 	http.prepare_content('text/html; charset=UTF-8');
