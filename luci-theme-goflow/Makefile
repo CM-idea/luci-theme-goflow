@@ -10,6 +10,9 @@ LUCI_TITLE:=Goflow Theme
 LUCI_DEPENDS:=+luci-base
 LUCI_PKGARCH:=all
 
+PKG_VERSION:=1.10
+PKG_RELEASE:=1
+
 PKG_LICENSE:=Apache-2.0
 PKG_MAINTAINER:=Dursun Tokgoz <dursuntokgoz@users.noreply.github.com>
 
