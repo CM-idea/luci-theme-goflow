@@ -145,6 +145,8 @@ a:hover { text-decoration: underline; }
 h1, h2, h3, h4, h5, h6 { margin: 0 0 9px; font-weight: 600; }
 h3, legend { font-size: 16px; color: var(--text-color-high); }
 
+h2[name="content"] { margin-bottom: 18px; }
+
 p { margin: 0 0 9px; line-height: 1.5; }
 
 hr { border: none; border-top: 1px solid var(--border-color-medium); margin: 18px 0; }
@@ -172,7 +174,8 @@ hr { border: none; border-top: 1px solid var(--border-color-medium); margin: 18p
 	transition: margin-left var(--transition);
 }
 
-.app--sidebar-collapsed .main { margin-left: var(--sidebar-width-collapsed); }
+.app--sidebar-collapsed .main,
+.app.app--sidebar-collapsed ~ .footer { margin-left: var(--sidebar-width-collapsed); }
 
 .sidebar {
 	position: fixed;
@@ -193,16 +196,11 @@ hr { border: none; border-top: 1px solid var(--border-color-medium); margin: 18p
 .sidebar__brand {
 	display: flex;
 	align-items: center;
+	gap: 12px;
 	height: var(--header-height);
 	padding: 0 18px;
 	border-bottom: 1px solid var(--border-color-medium);
 	flex-shrink: 0;
-}
-
-.sidebar__brand-link {
-	display: flex;
-	align-items: center;
-	gap: 12px;
 	overflow: hidden;
 	white-space: nowrap;
 }
@@ -354,7 +352,7 @@ hr { border: none; border-top: 1px solid var(--border-color-medium); margin: 18p
 
 .app--sidebar-collapsed .sidebar__submenu { max-height: 0 !important; }
 .app--sidebar-collapsed .sidebar__item { justify-content: center; padding: 12px; }
-.app--sidebar-collapsed .sidebar__brand-link { justify-content: center; }
+.app--sidebar-collapsed .sidebar__brand { justify-content: center; }
 .app--sidebar-collapsed .sidebar__item--active::before { left: -12px; }
 
 .overlay {
@@ -418,7 +416,69 @@ hr { border: none; border-top: 1px solid var(--border-color-medium); margin: 18p
 :root[data-darkmode="true"] .header__theme-icon--light { display: none; }
 :root[data-darkmode="true"] .header__theme-icon--dark { display: block; }
 
-.header__indicators { display: flex; align-items: center; gap: 8px; }
+.header__indicators {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.header__indicators [data-indicator] {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 5px 10px;
+	border-radius: 999px;
+	font-size: .76rem;
+	font-weight: 600;
+	background: var(--background-color-medium);
+	color: var(--primary-color-high);
+	border: 1px solid var(--border-color-medium);
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.header__indicators .label { margin: 0 4px; }
+
+/* Live status chips injected by status-goflow.js (CPU, RAM, NET, Uptime) */
+.header__stats {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-right: 6px;
+}
+
+.header__chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 5px 10px;
+	border-radius: 999px;
+	font-size: .76rem;
+	font-weight: 600;
+	background: var(--background-color-medium);
+	color: var(--text-color-medium);
+	border: 1px solid var(--border-color-medium);
+	white-space: nowrap;
+	transition: color var(--transition);
+}
+
+.header__chip .header__chip-icon { width: 13px; height: 13px; opacity: .8; flex-shrink: 0; }
+
+.header__chip .header__chip-value {
+	font-variant-numeric: tabular-nums;
+	line-height: 1;
+}
+
+.header__chip[data-level="ok"]     { color: var(--text-color-high); }
+.header__chip[data-level="warn"]   { color: var(--warn-color-high); }
+.header__chip[data-level="crit"]   { color: var(--error-color-high); }
+.header__chip[data-level="active"] { color: var(--primary-color-high); }
+.header__chip[data-level="busy"]   { color: var(--primary-color-high); }
+
+@media (max-width: 920px) {
+	.header__stats { display: none; }
+	.header__indicators { display: none; }
+}
 
 /* =====================================================================
    Content area
@@ -429,15 +489,65 @@ hr { border: none; border-top: 1px solid var(--border-color-medium); margin: 18p
 	padding: 24px;
 }
 
+/* Constrain content inside the main area so raw SVGs / images from any
+ * LuCI app (including the Overview dashboard) can't blow up to their
+ * native canvas size and cause the "giant icons" visual bug. */
+#maincontent img,
+#maincontent svg:not(.icon):not(.sidebar__icon) {
+	max-width: 100%;
+	max-height: 240px;
+}
+
+/* Generic table inside #maincontent (used by Overview / Status pages)
+ * that isn't already covered by the .table CBI rules above. */
+#maincontent table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 13px;
+}
+
+#maincontent table th,
+#maincontent table td {
+	padding: 8px 12px;
+	border: 1px solid var(--border-color-medium);
+	text-align: left;
+	vertical-align: middle;
+}
+
+#maincontent table th {
+	background: var(--background-color-medium);
+	font-weight: 600;
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: .3px;
+	color: var(--text-color-medium);
+}
+
+/* Prevent pre-formatted / raw text blocks from breaking layout */
+#maincontent pre,
+#maincontent code {
+	max-width: 100%;
+	overflow: auto;
+	font-family: var(--font-mono);
+	font-size: 12px;
+	background: var(--background-color-medium);
+	padding: 8px 10px;
+	border-radius: var(--radius-sm);
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
 .footer {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 12px;
+	margin-left: var(--sidebar-width);
 	padding: 14px 24px;
 	border-top: 1px solid var(--border-color-medium);
 	color: var(--text-color-medium);
 	font-size: 12px;
+	transition: margin-left var(--transition);
 }
 
 .footer a { color: var(--text-color-medium); }
@@ -758,6 +868,12 @@ label[for] { cursor: pointer; }
 	border-bottom: 1px solid var(--border-color-medium);
 }
 
+.cbi-section .cbi-title .label {
+	font-size: 12px;
+	font-weight: 400;
+	color: var(--text-color-medium);
+}
+
 .cbi-section-descr {
 	color: var(--text-color-medium);
 	font-size: 12.5px;
@@ -799,6 +915,34 @@ label[for] { cursor: pointer; }
 	padding: 10px 14px;
 	margin-bottom: 16px;
 	color: var(--error-color-high);
+}
+
+.cbi-progressbar {
+	border: 1px solid var(--border-color-high);
+	border-radius: 3px;
+	position: relative;
+	min-width: 170px;
+	height: 8px;
+	margin: 1.4em 0 4px 0;
+	background: var(--background-color-medium);
+}
+
+.cbi-progressbar > div {
+	background: var(--primary-color-medium);
+	height: 100%;
+	transition: width .25s ease-in;
+	width: 0%;
+	border-radius: 2px;
+}
+
+.cbi-progressbar::before {
+	position: absolute;
+	top: -1.4em;
+	left: 0;
+	content: attr(title);
+	white-space: pre;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .cbi-tooltip-container { cursor: help; }
@@ -859,9 +1003,9 @@ label[for] { cursor: pointer; }
 	border-top: 1px solid var(--border-color-medium);
 }
 
-.cbi-section-table .tr:hover .td, .cbi-section-table .tr:hover .th {
-	background-color: var(--background-color-medium);
-}
+.cbi-section-table .tr:hover .td,
+.cbi-section-table .tr:hover .th,
+.table .tr:hover .td { background-color: var(--background-color-medium); }
 
 .td.cbi-section-actions { text-align: right; width: 1%; white-space: nowrap; }
 .td.cbi-section-actions > * { display: flex; gap: 4px; justify-content: flex-end; }
@@ -904,6 +1048,7 @@ label[for] { cursor: pointer; }
 	padding: 4px;
 	background: var(--background-color-medium);
 	border-radius: var(--radius);
+	border: 1px solid var(--border-color-medium);
 }
 
 .tabs > li, .cbi-tabmenu > li {
@@ -912,7 +1057,7 @@ label[for] { cursor: pointer; }
 
 .tabs > li > a, .cbi-tabmenu > li > a {
 	display: block;
-	padding: 7px 14px;
+	padding: 12px 16px;
 	font-size: 13px;
 	font-weight: 600;
 	color: var(--text-color-medium);
@@ -920,7 +1065,20 @@ label[for] { cursor: pointer; }
 	white-space: nowrap;
 }
 
-.tabs > li > a:hover, .cbi-tabmenu > li > a:hover { color: var(--text-color-high); text-decoration: none; }
+.tabs > li > a:hover, .cbi-tabmenu > li > a:hover {
+	color: var(--text-color-high);
+	text-decoration: none;
+	background: var(--surface);
+	box-shadow: var(--shadow);
+}
+
+/* Hover-on-other-tab: active tab loses its background (box moves to hovered tab), but keeps accent color */
+.tabs:has(> li:not(.active):hover) > li.active > a,
+.cbi-tabmenu:has(> li:not(.active):not(.cbi-tab):hover) > li.active > a,
+.cbi-tabmenu:has(> li:not(.active):not(.cbi-tab):hover) > li.cbi-tab > a {
+	background: transparent;
+	box-shadow: none;
+}
 
 /* Active tab: #tabmenu nav tabs get class "active", CBI tab menus built by
    ui.tabs get "cbi-tab" on the active li and "cbi-tab-disabled" on every
@@ -1070,7 +1228,6 @@ body.modal-overlay-active #modal_overlay {
 
 /* =====================================================================
    Login screen (full-page, outline-inspired)
-   Design adapted from luci-theme-outline (Copyright 2025 eamonxg)
    ===================================================================== */
 
 @keyframes login-fade-in {
@@ -1093,6 +1250,10 @@ body.modal-overlay-active #modal_overlay {
 	align-items: center;
 	position: relative;
 	overflow: hidden;
+}
+
+[data-darkmode="true"] .login-screen {
+	--login-bg: #09090b;
 }
 
 .login-canvas {
@@ -1134,7 +1295,7 @@ body.modal-overlay-active #modal_overlay {
 	position: relative;
 	z-index: 10;
 	width: 100%;
-	max-width: 420px;
+	max-width: 24rem;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -1145,18 +1306,18 @@ body.modal-overlay-active #modal_overlay {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 24px;
+	gap: 1.5rem;
 	text-align: center;
 	width: 100%;
 }
 
 .login-hostname {
-	margin: 0 0 -6px;
+	margin: 0 0 -0.375rem;
 	font-family: var(--font-sans);
 	font-size: 2.5rem;
 	font-weight: 700;
 	line-height: 1;
-	letter-spacing: -.02em;
+	letter-spacing: -0.025em;
 	color: var(--login-fg);
 }
 
@@ -1167,7 +1328,7 @@ body.modal-overlay-active #modal_overlay {
 .login-divider {
 	display: flex;
 	align-items: center;
-	gap: 16px;
+	gap: 1rem;
 	width: 100%;
 }
 
@@ -1186,14 +1347,15 @@ body.modal-overlay-active #modal_overlay {
 .login-fields {
 	display: flex;
 	flex-direction: column;
-	gap: 12px;
+	gap: 0.75rem;
 	width: 100%;
 }
 
 .login-input {
 	appearance: none;
 	width: 100%;
-	padding: 14px 16px;
+	height: auto;
+	padding: 0.625rem 1rem;
 	text-align: center;
 	font-family: var(--font-sans);
 	font-size: 1rem;
@@ -1203,11 +1365,15 @@ body.modal-overlay-active #modal_overlay {
 	border: 1px solid color-mix(in srgb, var(--login-fg) 10%, transparent);
 	border-radius: 999px;
 	outline: none;
+	box-shadow: none;
+	backdrop-filter: blur(2px);
 	transition: border-color var(--transition);
 }
 
 .login-input:focus {
 	border-color: color-mix(in srgb, var(--login-fg) 25%, transparent);
+	box-shadow: none;
+	outline: none;
 }
 
 .login-input::placeholder {
@@ -1219,19 +1385,19 @@ body.modal-overlay-active #modal_overlay {
 }
 
 .login-password-wrap .login-input {
-	padding-right: 56px;
-	padding-left: 56px;
+	padding-right: 3rem;
+	padding-left: 3rem;
 	background: transparent;
-	backdrop-filter: blur(4px);
+	backdrop-filter: blur(1px);
 }
 
 .login-submit {
 	position: absolute;
 	top: 50%;
-	right: 6px;
+	right: 0.375rem;
 	transform: translateY(-50%);
-	width: 40px;
-	height: 40px;
+	width: 2.25rem;
+	height: 2.25rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -1240,6 +1406,7 @@ body.modal-overlay-active #modal_overlay {
 	background: color-mix(in srgb, var(--login-accent) 20%, transparent);
 	border: none;
 	border-radius: 999px;
+	box-shadow: none;
 	cursor: pointer;
 	transition: background var(--transition);
 }
@@ -1265,17 +1432,18 @@ body.modal-overlay-active #modal_overlay {
 	border: 1px solid color-mix(in oklab, var(--error-color-high) 15%, transparent);
 	background: color-mix(in oklab, var(--error-color-high) 8%, transparent);
 	border-radius: 999px;
-	padding: 10px 16px;
+	padding: 0.625rem 1rem;
 	text-align: center;
+	font-family: var(--font-sans);
 	font-size: .875rem;
 	width: 100%;
-	backdrop-filter: blur(12px);
+	backdrop-filter: blur(24px);
 }
 
 .login-screen .alert-message:before { display: none; }
 
 .login-footer {
-	padding-top: 20px;
+	padding-top: 1.5rem;
 	font-size: .75rem;
 	color: color-mix(in srgb, var(--login-fg) 30%, transparent);
 }
@@ -1288,6 +1456,114 @@ body.modal-overlay-active #modal_overlay {
 
 .login-footer a:hover {
 	color: color-mix(in srgb, var(--login-fg) 60%, transparent);
+}
+
+/* =====================================================================
+   Network status table / ifacebox cards (Overview page)
+   ===================================================================== */
+
+.network-status-table {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+.network-status-table .ifacebox {
+	flex: 1 1 220px;
+	min-width: 180px;
+	margin: 0;
+	border: 1px solid var(--border-color-medium);
+	border-radius: var(--radius);
+	background: var(--surface);
+	box-shadow: var(--shadow);
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+	overflow: hidden;
+}
+
+.ifacebox .ifacebox-head {
+	padding: 8px 12px;
+	font-size: 13px;
+	font-weight: 600;
+	background: var(--background-color-medium);
+	color: var(--text-color-high);
+	border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.ifacebox .ifacebox-head.active {
+	background: linear-gradient(135deg, var(--primary-color-high), var(--primary-color-medium));
+	color: var(--on-primary-color);
+}
+
+[data-darkmode="true"] .ifacebox-head[style] {
+	background: linear-gradient(rgba(var(--zone-color-rgb, .4)), rgba(var(--zone-color-rgb, .3))) !important;
+}
+
+.ifacebox .ifacebox-body {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	padding: 12px;
+	text-align: left;
+	line-height: 1.5;
+	font-size: 12.5px;
+	gap: 8px;
+}
+
+.network-status-table .ifacebox-body > span { flex: 1; }
+
+.network-status-table .ifacebox-body > div {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	margin-top: 4px;
+}
+
+.ifacebadge {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 8px;
+	border: 1px solid var(--border-color-medium);
+	border-radius: var(--radius-sm);
+	background: var(--background-color-medium);
+	color: var(--text-color-high);
+	font-size: 12px;
+	line-height: 1.4;
+	white-space: nowrap;
+}
+
+.network-status-table .ifacebox-body .ifacebadge {
+	display: flex;
+	flex: 1;
+	min-width: 0;
+	margin: 0;
+}
+
+.ifacebadge img { width: 32px; height: 32px; flex-shrink: 0; }
+
+.ifacebadge > span { overflow: hidden; text-overflow: ellipsis; }
+
+.zonebadge {
+	display: inline-block;
+	padding: 2px 6px;
+	border-radius: 4px;
+	color: var(--text-color-high);
+	font-size: 12px;
+}
+
+.zonebadge > em,
+.zonebadge > strong { margin: 0 2px; display: inline-block; }
+
+.zonebadge input { width: 6em; }
+
+.zonebadge > .ifacebadge { margin-left: 2px; }
+
+.zonebadge-empty {
+	border: 1px dashed var(--border-color-high);
+	opacity: .5;
 }
 
 /* =====================================================================
@@ -1324,4 +1600,286 @@ body.modal-overlay-active #modal_overlay {
 	.table .tr:first-child .th { display: none; }
 	.table .td, .table .th { border-top: none; padding: 6px 0; }
 	.tr { border-bottom: 1px solid var(--border-color-medium); padding: 8px 0; }
+}
+
+/* =====================================================================
+   Goflow Dashboard — inline demo-card layout, scoped with db-* prefix
+   ===================================================================== */
+
+.goflow-dashboard { display: flex; flex-direction: column; gap: 26px; }
+
+/* ---- Grids ---- */
+.db-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; }
+.db-main  { display: grid; grid-template-columns: 2fr 1fr; gap: 26px; }
+.db-bottom { display: grid; grid-template-columns: 3fr 2fr; gap: 26px; }
+
+/* ---- Stat cards ---- */
+.db-stat {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	padding: 22px;
+	background: var(--surface);
+	border: 1px solid var(--border-color-medium);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow);
+	transition: transform var(--transition), box-shadow var(--transition);
+}
+.db-stat:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); }
+
+.db-stat__icon {
+	display: grid;
+	place-items: center;
+	width: 50px;
+	height: 50px;
+	border-radius: 14px;
+	flex-shrink: 0;
+}
+.db-stat__icon svg { width: 24px; height: 24px; }
+
+.db-stat__icon--blue   { background: color-mix(in srgb, var(--primary-color-high) 12%, transparent); color: var(--primary-color-high); }
+.db-stat__icon--green  { background: rgba(var(--success-color-high-rgb), .13); color: var(--success-color-high); }
+.db-stat__icon--orange { background: rgba(var(--warning-color-high-rgb, 239, 140, 59), .14); color: var(--warning-color-high, #ef8c3b); }
+.db-stat__icon--purple { background: color-mix(in srgb, var(--primary-color-high) 13%, transparent); color: var(--primary-color-high); }
+
+.db-stat__body { display: flex; flex-direction: column; min-width: 0; }
+
+.db-stat__label {
+	font-size: 11.5px;
+	font-weight: 700;
+	color: var(--text-color-medium);
+	text-transform: uppercase;
+	letter-spacing: .6px;
+}
+
+.db-stat__value {
+	font-size: 23px;
+	font-weight: 800;
+	line-height: 1.35;
+	letter-spacing: -.4px;
+	font-variant-numeric: tabular-nums;
+	color: var(--text-color-high);
+}
+.db-stat__value small { font-size: 13px; font-weight: 600; color: var(--text-color-medium); letter-spacing: 0; }
+
+.db-stat__meta {
+	font-size: 12px;
+	color: var(--text-color-medium);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.db-stat__indicator {
+	position: absolute;
+	top: 18px;
+	right: 18px;
+	width: 9px;
+	height: 9px;
+	border-radius: 50%;
+	display: inline-block;
+}
+
+.db-stat__indicator--online {
+	background: var(--success-color-high);
+	box-shadow: 0 0 0 3px rgba(var(--success-color-high-rgb), .13);
+	animation: db-pulse 2.4s infinite;
+}
+.db-stat__indicator--offline { background: var(--error-color-high); }
+
+@keyframes db-pulse {
+	0%, 100% { box-shadow: 0 0 0 3px rgba(var(--success-color-high-rgb), .13); }
+	50%      { box-shadow: 0 0 0 6px rgba(var(--success-color-high-rgb), .13); }
+}
+
+/* ---- Cards ---- */
+.db-card {
+	background: var(--surface);
+	border: 1px solid var(--border-color-medium);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow);
+	overflow: hidden;
+}
+
+.db-card__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 18px 22px;
+	border-bottom: 1px solid var(--border-color-medium);
+}
+
+.db-card__title { font-size: 15px; font-weight: 700; letter-spacing: -.1px; }
+.db-card__sub { font-size: 12.5px; color: var(--text-color-medium); }
+.db-card__actions { display: flex; gap: 16px; }
+.db-card__link { font-size: 13px; font-weight: 600; color: var(--primary-color-high); }
+.db-card__link:hover { opacity: .8; }
+
+.db-card__body { padding: 22px; }
+.db-card__body--flush { padding: 0; overflow-x: auto; }
+
+/* ---- Traffic chart ---- */
+.db-chart { display: block; width: 100%; }
+
+.db-legend {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 12.5px;
+	font-weight: 500;
+	color: var(--text-color-medium);
+}
+
+.db-legend__dot { width: 10px; height: 10px; border-radius: 3px; }
+.db-legend__dot--down { background: var(--primary-color-high); }
+.db-legend__dot--up   { background: var(--warning-color-high, #ef8c3b); }
+
+/* ---- Meter / Progress ---- */
+.db-meter { margin-bottom: 18px; }
+
+.db-meter__head {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 8px;
+}
+
+.db-meter__label { font-weight: 500; }
+.db-meter__value { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.db-progress {
+	height: 8px;
+	border-radius: 99px;
+	background: var(--background-color-high);
+	overflow: hidden;
+}
+
+.db-progress__bar {
+	height: 100%;
+	border-radius: 99px;
+	transition: width .6s ease;
+}
+.db-progress__bar--blue   { background: linear-gradient(90deg, var(--primary-color-high), var(--primary-color-medium)); }
+.db-progress__bar--green  { background: linear-gradient(90deg, var(--success-color-high), var(--success-color-medium)); }
+.db-progress__bar--orange { background: linear-gradient(90deg, var(--warning-color-high, #ef8c3b), var(--warning-color-high, #ef8c3b)); }
+.db-progress__bar--danger { background: linear-gradient(90deg, var(--error-color-high), var(--error-color-high)); }
+
+/* ---- Info list ---- */
+.db-info-list { margin-top: 6px; }
+
+.db-info-list__item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 11px 0;
+	border-top: 1px solid var(--border-color-medium);
+	font-size: 13px;
+}
+
+.db-info-list__item span { color: var(--text-color-medium); }
+.db-info-list__item strong { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+
+/* ---- Table ---- */
+.db-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 13px;
+}
+
+.db-table th {
+	padding: 13px 22px;
+	text-align: left;
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .7px;
+	color: var(--text-color-medium);
+	background: var(--background-color-medium);
+	border-bottom: 1px solid var(--border-color-medium);
+}
+
+.db-table td {
+	padding: 13px 22px;
+	border-bottom: 1px solid var(--border-color-medium);
+	vertical-align: middle;
+}
+
+.db-table tbody tr:last-child td { border-bottom: none; }
+.db-table tbody tr { transition: background var(--transition); }
+.db-table tbody tr:hover { background: var(--background-color-medium); }
+
+.db-table__col--right { text-align: right !important; }
+
+/* ---- Device cell ---- */
+.db-device { display: flex; align-items: center; gap: 12px; }
+
+.db-device__icon {
+	display: grid;
+	place-items: center;
+	width: 38px;
+	height: 38px;
+	border-radius: 10px;
+	background: var(--background-color-medium);
+	border: 1px solid var(--border-color-medium);
+	color: var(--text-color-medium);
+	flex-shrink: 0;
+}
+.db-device__icon svg { width: 20px; height: 20px; }
+
+.db-device__info { display: flex; flex-direction: column; min-width: 0; }
+.db-device__name { font-weight: 600; }
+.db-device__mac { font-size: 11px; color: var(--text-color-medium); font-family: "SF Mono", Consolas, monospace; }
+
+/* device badge (table cells, DHCP leases, etc.) */
+.device { display: flex; align-items: center; gap: 8px; }
+.device__icon { flex-shrink: 0; display: flex; align-items: center; }
+.device__icon > .icon { width: 20px; height: 20px; color: var(--text-color-medium); }
+.device__info { display: flex; flex-direction: column; min-width: 0; }
+.device__name { font-weight: 600; }
+.device__mac { font-size: 11px; color: var(--text-color-medium); font-family: "SF Mono", Consolas, monospace; }
+
+/* ---- WiFi list ---- */
+.db-wifi { padding: 14px 0; }
+.db-wifi + .db-wifi { border-top: 1px solid var(--border-color-medium); }
+.db-wifi:first-child { padding-top: 0; }
+.db-wifi:last-child { padding-bottom: 0; }
+
+.db-wifi__head {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+}
+
+.db-wifi__icon { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; background: var(--background-color-medium); border: 1px solid var(--border-color-medium); color: var(--text-color-medium); flex-shrink: 0; }
+.db-wifi__icon svg { width: 20px; height: 20px; }
+
+.db-wifi__icon--active {
+	background: color-mix(in srgb, var(--primary-color-high) 13%, transparent);
+	border-color: transparent;
+	color: var(--primary-color-high);
+}
+
+.db-wifi__meta { flex: 1; min-width: 0; }
+.db-wifi__ssid { display: block; font-weight: 600; font-size: 14px; }
+.db-wifi__band { display: block; font-size: 12px; color: var(--text-color-medium); margin-top: 2px; }
+
+/* ---- Toggle switch ---- */
+.switch { position: relative; display: inline-block; width: 44px; height: 25px; flex-shrink: 0; }
+.switch__input { opacity: 0; width: 0; height: 0; }
+.switch__slider { position: absolute; inset: 0; border-radius: 99px; background: var(--border-color-medium); cursor: pointer; transition: background var(--transition); }
+.switch__slider::before { content: ''; position: absolute; left: 3px; top: 3px; width: 19px; height: 19px; border-radius: 50%; background: #fff; transition: transform var(--transition); }
+.switch__input:checked + .switch__slider { background: var(--primary-color-high); }
+.switch__input:checked + .switch__slider::before { transform: translateX(19px); }
+
+/* ---- Responsive ---- */
+@media (max-width: 1280px) {
+	.db-stats { grid-template-columns: repeat(2, 1fr); }
+	.db-main, .db-bottom { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+	.goflow-dashboard { gap: 16px; }
+	.db-stats, .db-main, .db-bottom { gap: 16px; }
+	.db-stats { grid-template-columns: 1fr; }
+	.db-table { min-width: 560px; }
 }

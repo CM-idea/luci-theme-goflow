@@ -26,7 +26,7 @@
 			</span>
 			<ul class="breadcrumb" id="modemenu" style="display:none"></ul>
 		</footer>
-		<script>L.require('menu-goflow')</script>
+		<script>L.require('menu-goflow');L.require('status-goflow')</script>
 		{% endif %}
 	</body>
 </html>

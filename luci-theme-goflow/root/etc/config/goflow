@@ -1,0 +1,11 @@
+config global 'global'
+	# Theme mode: auto (follow system) | light | dark
+	option mode 'auto'
+	# Base font size in px
+	option font_size '14'
+	# Start with the navigation rail collapsed on desktop
+	option rail_collapsed '0'
+	# Show the live status bar (CPU / RAM / throughput / uptime) in the header
+	option status_bar '1'
+	# Show the dashboard menu entry
+	option dashboard '1'

@@ -6,12 +6,15 @@
  * can contribute one), so this is a best-effort icon lookup by menu node
  * name with a generic fallback - not an exhaustive registry. */
 var ICONS = {
-	status: 'dashboard',
+	status: 'chart',
 	system: 'settings',
 	network: 'globe',
 	services: 'layers',
 	vpn: 'shield',
-	firewall: 'shield'
+	firewall: 'shield',
+	'goflow-dashboard': 'dashboard',
+	'goflow-stations': 'chart',
+	logout: 'logout'
 };
 
 function iconHtml(name) {

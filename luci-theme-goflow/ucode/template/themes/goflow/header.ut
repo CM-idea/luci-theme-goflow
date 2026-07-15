@@ -69,23 +69,35 @@
 			<symbol id="goflow-icon-menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></symbol>
 			<symbol id="goflow-icon-dashboard" viewBox="0 0 24 24"><path d="M4 13h6V4H4v9zm0 7h6v-5H4v5zm10 0h6v-9h-6v9zm0-16v5h6V4h-6z" fill="currentColor"/></symbol>
 			<symbol id="goflow-icon-settings" viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 1112 8.5a3.5 3.5 0 010 7zm7.4-2.6c.05-.3.1-.6.1-.9s-.05-.6-.1-.9l2-1.6a.5.5 0 00.1-.6l-1.9-3.3a.5.5 0 00-.6-.2l-2.4 1a7 7 0 00-1.6-.9l-.4-2.6a.5.5 0 00-.5-.4h-3.8a.5.5 0 00-.5.4l-.4 2.6a7 7 0 00-1.6.9l-2.4-1a.5.5 0 00-.6.2L2.9 8.9a.5.5 0 00.1.6l2 1.6c-.05.3-.1.6-.1.9s.05.6.1.9l-2 1.6a.5.5 0 00-.1.6l1.9 3.3c.1.2.4.3.6.2l2.4-1c.5.4 1 .7 1.6.9l.4 2.6c0 .2.2.4.5.4h3.8c.3 0 .5-.2.5-.4l.4-2.6a7 7 0 001.6-.9l2.4 1c.2.1.5 0 .6-.2l1.9-3.3a.5.5 0 00-.1-.6l-2-1.6z" fill="currentColor"/></symbol>
-			<symbol id="goflow-icon-globe" viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 2c1.9 0 3.6 2.9 3.9 7H8.1c.3-4.1 2-7 3.9-7zm-5.9 7H4.1a8 8 0 014.6-6.3A13.6 13.6 0 006.1 11zm0 2a13.6 13.6 0 002.6 6.3A8 8 0 014.1 13h2zm2 0h7.8c-.3 4.1-2 7-3.9 7s-3.6-2.9-3.9-7zm9.8 0h2a8 8 0 01-4.6 6.3 13.6 13.6 0 002.6-6.3zm0-2a13.6 13.6 0 00-2.6-6.3A8 8 0 0119.9 11h-2z" fill="currentColor"/></symbol>
-			<symbol id="goflow-icon-layers" viewBox="0 0 24 24"><path d="M12 2l9 5-9 5-9-5 9-5zm-9 8.5L12 15l9-4.5v3L12 18l-9-4.5v-3zm0 5L12 20l9-4.5v3L12 23l-9-4.5v-3z" fill="currentColor"/></symbol>
+			<symbol id="goflow-icon-globe" viewBox="0 0 1024 1024"><path d="M957.06 511.84c0 246.74-200.15 446.76-447 446.76S63 758.58 63 511.84 263.13 65.09 510 65.09s447.06 200.02 447.06 446.75z m-81.28 0c0-201.56-164.07-365.52-365.76-365.52s-365.75 164-365.75 365.52S308.33 877.37 510 877.37s365.78-163.96 365.78-365.53z" fill="currentColor"/><path d="M713.22 511.84c0 246.74-91 446.76-203.2 446.76s-203.19-200-203.19-446.76S397.8 65.09 510 65.09s203.22 200.02 203.22 446.75z m-81.28 0c0-237.41-86.52-365.52-121.92-365.52S388.1 274.43 388.1 511.84 474.62 877.37 510 877.37s121.94-128.11 121.94-365.53z" fill="currentColor"/><path d="M144.27 308.78h731.51v81.23H144.27zM144.27 593.07h731.51v81.23H144.27z" fill="currentColor"/></symbol>
+			<symbol id="goflow-icon-layers" viewBox="0 0 1024 1024"><path d="M850.140277 490.865657l-63.400982 0L786.739295 321.79603c0-46.705742-37.829584-84.535325-84.535325-84.535325L533.13332 237.260705l0-63.400982c0-58.329477-47.339168-105.668645-105.668645-105.668645S321.79603 115.530246 321.79603 173.859723l0 63.400982L152.726403 237.260705c-46.705742 0-84.1127 37.829584-84.1127 84.535325l-0.211824 160.616094 63.190181 0c62.978357 0 114.122177 51.14382 114.122177 114.122177s-51.14382 114.122177-114.122177 114.122177L68.402903 710.656479l-0.211824 160.616094c0 46.705742 37.829584 84.535325 84.535325 84.535325l160.616094 0 0-63.400982c0-62.978357 51.14382-114.122177 114.122177-114.122177s114.122177 51.14382 114.122177 114.122177l0 63.400982 160.616094 0c46.705742 0 84.535325-37.829584 84.535325-84.535325L786.738271 702.20397l63.400982 0c58.329477 0 105.668645-47.339168 105.668645-105.668645S908.46873 490.865657 850.140277 490.865657z" fill="currentColor"/></symbol>
 			<symbol id="goflow-icon-shield" viewBox="0 0 24 24"><path d="M12 2l8 3v6c0 5-3.4 9.4-8 11-4.6-1.6-8-6-8-11V5l8-3zm-1 13.5l6-6-1.4-1.4L11 12.7 9.4 11 8 12.4l3 3.1z" fill="currentColor"/></symbol>
 			<symbol id="goflow-icon-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="currentColor"/></symbol>
 			<symbol id="goflow-icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="currentColor"/><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
 			<symbol id="goflow-icon-moon" viewBox="0 0 24 24"><path d="M20.7 14.9A8.8 8.8 0 019.1 3.3 9 9 0 1020.7 15z" fill="currentColor"/></symbol>
 			<symbol id="goflow-icon-chevron" viewBox="0 0 24 24"><path d="M8.6 9l3.4 3.4L15.4 9 17 10.6l-5 5-5-5L8.6 9z" fill="currentColor"/></symbol>
-		</svg>
+			<symbol id="goflow-icon-arrow-down" viewBox="0 0 24 24"><path d="M12 20l-6-6 1.4-1.4L11 16.2V4h2v12.2l3.6-3.6L18 14l-6 6z" fill="currentColor"/></symbol>
+			<symbol id="goflow-icon-arrow-up" viewBox="0 0 24 24"><path d="M12 4l6 6-1.4 1.4L13 7.8V20h-2V7.8l-3.6 3.6L6 10l6-6z" fill="currentColor"/></symbol>
+			<symbol id="goflow-icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.8 1.8 0 110-3.6 1.8 1.8 0 010 3.6zm-4.2-5.2l1.6 1.6a3.7 3.7 0 015.2 0l1.6-1.6a6 6 0 00-8.4 0zm-3.2-3.2l1.6 1.6a8.2 8.2 0 0111.6 0l1.6-1.6a10.5 10.5 0 00-14.8 0zM1.4 8.4L3 10a12.7 12.7 0 0118 0l1.6-1.6a15 15 0 00-21.2 0z" fill="currentColor"/></symbol>
+			<symbol id="goflow-icon-laptop" viewBox="0 0 24 24"><path d="M4 5h16a1 1 0 011 1v10h-2V7H5v9H3V6a1 1 0 011-1zM1 18h22v2H1v-2z" fill="currentColor"/></symbol>
+			<symbol id="goflow-icon-phone" viewBox="0 0 24 24"><path d="M7 2h10a2 2 0 012 2v16a2 2 0 01-2 2H7a2 2 0 01-2-2V4a2 2 0 012-2zm0 4v12h10V6H7z" fill="currentColor"/></symbol>
+			<symbol id="goflow-icon-tv" viewBox="0 0 24 24"><path d="M3 4h18a1 1 0 011 1v12a1 1 0 01-1 1h-7v2h3v2H7v-2h3v-2H3a1 1 0 01-1-1V5a1 1 0 011-1zm1 2v10h16V6H4z" fill="currentColor"/></symbol>
+			<symbol id="goflow-icon-usb" viewBox="0 0 24 24"><path d="M12 1l3 4h-2v9.6l3-1.8V10h-1V7h3v3h-1v3.9l-4 2.4V18a2.5 2.5 0 11-2 0v-2.3l-4-2.4V10a2 2 0 112 0v2.1l2 1.2V5H9l3-4z" fill="currentColor"/></symbol>
+			<symbol id="goflow-icon-chip-cpu" viewBox="0 0 14 14"><polyline points="1 9 4 4 7 11 10 2 13 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+			<symbol id="goflow-icon-chip-ram" viewBox="0 0 14 14"><path d="M1 3 H13 V10 H8 V9 H6 V10 H1 Z" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><rect x="2.2" y="4.5" width="2" height="3" fill="currentColor" stroke="none"/><rect x="6" y="4.5" width="2" height="3" fill="currentColor" stroke="none"/><rect x="9.8" y="4.5" width="2" height="3" fill="currentColor" stroke="none"/></symbol>
+			<symbol id="goflow-icon-chip-net" viewBox="0 0 14 14"><line x1="7" y1="1" x2="7" y2="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><polyline points="3 4 7 1 11 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3 10 7 13 11 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+			<symbol id="goflow-icon-chip-uptime" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><polyline points="7 3 7 7 10 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+			<symbol id="goflow-icon-logout" viewBox="0 0 1024 1024"><path d="M863.4 493.3L744.2 344.2c-5.8-7.2-14.4-11.2-23.3-11.2-3.3 0-6.6 0.5-9.9 1.7-11.9 4.2-19.9 15.5-19.9 28.1v89.5H452.5c-32.9 0-59.6 26.7-59.6 59.6 0 32.9 26.7 59.6 59.6 59.6H691V661c0 12.7 8 23.9 19.9 28.1 3.2 1.1 6.6 1.7 9.9 1.7 8.9 0 17.5-4 23.3-11.2l119.3-149.1c8.8-10.8 8.8-26.3 0-37.2zM571.8 750.5H332.7c-32.7 0-59.2-26.7-59.2-59.6V333v-0.5c0-32.7 26.7-59.2 59.7-59.2h238.5c32.9 0 59.6-26.7 59.6-59.6 0-32.9-26.7-59.6-59.6-59.6H273.6c-65.9 0-119.3 53.4-119.3 119.3v477.1c0 65.9 53.4 119.3 119.3 119.3h298.2c32.9 0 59.6-26.7 59.6-59.6 0-33-26.7-59.7-59.6-59.7z" fill="currentColor"/></symbol>
+			<symbol id="goflow-icon-chart" viewBox="0 0 24 24"><path d="M5 9h4v11H5V9zm7-6h4v17h-4V3zm7 8h4v9h-4v-9z" fill="currentColor"/></symbol>
+		<symbol id="goflow-icon-home" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8h5z" fill="currentColor"/></symbol>
+	</svg>
 
 		{% if (!blank_page): %}
 		<div class="app" id="goflow-app">
 			<aside class="sidebar" id="goflow-sidebar">
 				<div class="sidebar__brand">
-					<a class="sidebar__brand-link" href="/">
-						<img class="sidebar__logo" src="/luci-static/goflow/logo.svg" alt="">
-						<span class="sidebar__brand-text">{{ striptags(boardinfo.hostname ?? '?') }}</span>
-					</a>
+					<img class="sidebar__logo" src="/luci-static/goflow/logo.svg" alt="">
+					<span class="sidebar__brand-text">{{ striptags(boardinfo.hostname ?? '?') }}</span>
 				</div>
 				<nav class="sidebar__nav" id="sidebar-menu"></nav>
 			</aside>
@@ -101,6 +113,7 @@
 						<h1 class="header__title">{{ striptags(dispatched?.title ? _(dispatched.title) : (boardinfo.hostname ?? 'Goflow')) }}</h1>
 					</div>
 					<div class="header__right">
+						<div id="goflow-stats" class="header__stats"></div>
 						<div id="indicators" class="header__indicators"></div>
 						{% if (!darkpref): %}
 						<button class="header__btn" id="goflow-theme-toggle" type="button" aria-label="{{ _('Toggle dark mode') }}">

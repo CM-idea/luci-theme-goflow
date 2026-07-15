@@ -1,0 +1,22 @@
+{
+	"luci-theme-goflow": {
+		"description": "Grant access to Goflow theme settings and dashboard",
+		"read": {
+			"uci": [ "goflow" ],
+			"ubus": {
+				"system": [ "info", "board" ],
+				"network.interface": [ "dump" ],
+				"network.device": [ "status" ]
+			},
+			"file": {
+				"/proc/meminfo": [ "read" ],
+				"/proc/loadavg": [ "read" ],
+				"/proc/uptime": [ "read" ],
+				"/etc/os-release": [ "read" ]
+			}
+		},
+		"write": {
+			"uci": [ "goflow" ]
+		}
+	}
+}

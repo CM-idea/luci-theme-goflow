@@ -21,8 +21,23 @@ fi
 set_opt themes.GoflowDark /luci-static/goflow-dark
 set_opt themes.GoflowLight /luci-static/goflow-light
 
+# Initialise Goflow UCI config if not present
+if ! uci -q get goflow.global 2>/dev/null; then
+	uci -q batch <<-CFG
+		set goflow.global=global
+		set goflow.global.mode=auto
+		set goflow.global.font_size=14
+		set goflow.global.rail_collapsed=0
+		set goflow.global.status_bar=1
+		set goflow.global.dashboard=1
+		commit goflow
+	CFG
+fi
+
 if [ $changed = 1 ]; then
 	uci commit luci
 fi
+
+rm -f /tmp/luci-indexcache /tmp/luci-modulecache 2>/dev/null
 
 exit 0
