@@ -1,5 +1,14 @@
 name: Build
 
+# luci-theme-goflow 的 LUCI_PKGARCH=all（纯模板/CSS/JS，无编译代码），
+# 所有架构产出的 .apk 字节完全一致。
+# 选择 aarch64_cortex-a53 对应 GL.iNet AX1800 (IPQ6000) 的 CPU 架构。
+# OpenWrt 25.12+ 使用 apk 包管理器，产出 .apk 格式。
+
+env:
+  PACKAGE: luci-theme-goflow
+  FEEDNAME: luci_theme_goflow
+
 on:
   push:
     branches: [main]
@@ -8,66 +17,77 @@ on:
     branches: [main]
   workflow_dispatch:
 
+concurrency:
+  group: goflow-build-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
 jobs:
   build:
-    name: ${{ matrix.sdk }} / ${{ matrix.arch }}
+    name: OpenWrt 25.12 / aarch64_cortex-a53
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        # luci-theme-goflow 的 LUCI_PKGARCH=all（纯模板/CSS/JS，无编译代码），
-        # 所有架构产出的 .ipk/.apk 字节完全一致，只需要一个组合即可。
-        # 选择 aarch64_cortex-a53 对应 GL.iNet AX1800 (IPQ6000) 的 CPU 架构。
-        arch: [aarch64_cortex-a53]
-        sdk: [openwrt-25.12]
-
     steps:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - name: Build package
-        uses: openwrt/gh-action-sdk@v11
+      - name: Build package with OpenWrt SDK
+        uses: openwrt/gh-action-sdk@main
         env:
-          ARCH: ${{ matrix.arch }}-${{ matrix.sdk }}
-          FEEDNAME: luci_theme_goflow
-          PACKAGES: luci-theme-goflow
-          NO_REFRESH_CHECK: true
+          ARCH: aarch64_cortex-a53-25.12.5
+          FEEDNAME: ${{ env.FEEDNAME }}
+          PACKAGES: ${{ env.PACKAGE }}
           V: s
+
+      - name: Collect package
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          find "$GITHUB_WORKSPACE/bin" -type f \( -name "${PACKAGE}_*_all.ipk" -o -name "${PACKAGE}-*.apk" \) -print -exec cp -v {} dist/ \;
+          echo "Built packages:"
+          find dist -maxdepth 1 -type f -printf '%f\n' | sort
+          test "$(find dist -maxdepth 1 -type f \( -name '*.ipk' -o -name '*.apk' \) | wc -l)" -ge 1 || {
+            echo "::error::No ${PACKAGE} .ipk or .apk package was produced"
+            exit 1
+          }
 
       - name: Upload package artifact
         uses: actions/upload-artifact@v6
         with:
-          name: luci-theme-goflow-${{ matrix.sdk }}-${{ matrix.arch }}
-          path: |
-            bin/packages/${{ matrix.arch }}/luci_theme_goflow/*.ipk
-            bin/packages/${{ matrix.arch }}/luci_theme_goflow/*.apk
-          if-no-files-found: warn
+          name: ${{ env.PACKAGE }}
+          path: dist/*
+          if-no-files-found: error
 
   release:
-    name: Publish release assets
+    name: Publish GitHub release
     needs: build
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      # 所有矩阵组合产出完全相同的包（arch=all），文件名也一样，
-      # 下载多份只会互相覆盖。只发布一份即可。
-      - name: Download canonical build artifact
+      - name: Download packages
         uses: actions/download-artifact@v6
         with:
-          name: luci-theme-goflow-openwrt-25.12-aarch64_cortex-a53
+          name: ${{ env.PACKAGE }}
           path: artifacts
 
-      - name: Rename assets to the tag name
+      - name: Rename assets to tag name
+        shell: bash
         run: |
+          set -euo pipefail
           cd artifacts
           for f in *.apk *.ipk; do
             [ -e "$f" ] || continue
-            mv "$f" "luci-theme-goflow-${GITHUB_REF_NAME}.${f##*.}"
+            mv "$f" "${PACKAGE}-${GITHUB_REF_NAME}.${f##*.}"
           done
           ls -la
 
       - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v3
         with:
-          files: artifacts/*.*pk
+          files: artifacts/*
+          fail_on_unmatched_files: true
