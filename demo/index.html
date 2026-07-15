@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenWrt — 概览 | Goflow 主题演示</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    // 在 CSS 加载前应用主题偏好（避免闪白）
+    // ?theme=dark|light 参数可用于截图时强制指定主题
+    (function () {
+      var forced = new URLSearchParams(location.search).get("theme");
+      var saved = null;
+      try { saved = localStorage.getItem("theme"); } catch (e) {}
+      var theme = forced || saved ||
+        (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- ================= SVG 图标精灵表（无外部依赖） ================= -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <symbol id="icon-menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></symbol>
+    <symbol id="icon-dashboard" viewBox="0 0 24 24"><path d="M4 13h6V4H4v9zm0 7h6v-5H4v5zm10 0h6v-9h-6v9zm0-16v5h6V4h-6z" fill="currentColor"/></symbol>
+    <symbol id="icon-globe" viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 2c1.9 0 3.6 2.9 3.9 7H8.1c.3-4.1 2-7 3.9-7zm-5.9 7H4.1a8 8 0 014.6-6.3A13.6 13.6 0 006.1 11zm0 2a13.6 13.6 0 002.6 6.3A8 8 0 014.1 13h2zm2 0h7.8c-.3 4.1-2 7-3.9 7s-3.6-2.9-3.9-7zm9.8 0h2a8 8 0 01-4.6 6.3 13.6 13.6 0 002.6-6.3zm0-2a13.6 13.6 0 00-2.6-6.3A8 8 0 0119.9 11h-2z" fill="currentColor"/></symbol>
+    <symbol id="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.8 1.8 0 110-3.6 1.8 1.8 0 010 3.6zm-4.2-5.2l1.6 1.6a3.7 3.7 0 015.2 0l1.6-1.6a6 6 0 00-8.4 0zm-3.2-3.2l1.6 1.6a8.2 8.2 0 0111.6 0l1.6-1.6a10.5 10.5 0 00-14.8 0zM1.4 8.4L3 10a12.7 12.7 0 0118 0l1.6-1.6a15 15 0 00-21.2 0z" fill="currentColor"/></symbol>
+    <symbol id="icon-layers" viewBox="0 0 24 24"><path d="M12 2l9 5-9 5-9-5 9-5zm-9 8.5L12 15l9-4.5v3L12 18l-9-4.5v-3zm0 5L12 20l9-4.5v3L12 23l-9-4.5v-3z" fill="currentColor"/></symbol>
+    <symbol id="icon-settings" viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 1112 8.5a3.5 3.5 0 010 7zm7.4-2.6c.05-.3.1-.6.1-.9s-.05-.6-.1-.9l2-1.6a.5.5 0 00.1-.6l-1.9-3.3a.5.5 0 00-.6-.2l-2.4 1a7 7 0 00-1.6-.9l-.4-2.6a.5.5 0 00-.5-.4h-3.8a.5.5 0 00-.5.4l-.4 2.6a7 7 0 00-1.6.9l-2.4-1a.5.5 0 00-.6.2L2.9 8.9a.5.5 0 00.1.6l2 1.6c-.05.3-.1.6-.1.9s.05.6.1.9l-2 1.6a.5.5 0 00-.1.6l1.9 3.3c.1.2.4.3.6.2l2.4-1c.5.4 1 .7 1.6.9l.4 2.6c0 .2.2.4.5.4h3.8c.3 0 .5-.2.5-.4l.4-2.6a7 7 0 001.6-.9l2.4 1c.2.1.5 0 .6-.2l1.9-3.3a.5.5 0 00-.1-.6l-2-1.6z" fill="currentColor"/></symbol>
+    <symbol id="icon-power" viewBox="0 0 24 24"><path d="M11 3h2v10h-2V3zm6.4 2.6l-1.4 1.5A7 7 0 1112 19a7 7 0 01-4-12.9L6.6 4.6a9 9 0 1010.8 1z" fill="currentColor"/></symbol>
+    <symbol id="icon-cpu" viewBox="0 0 24 24"><path d="M9 2h2v3h2V2h2v3h2a2 2 0 012 2v2h3v2h-3v2h3v2h-3v2a2 2 0 01-2 2h-2v3h-2v-3h-2v3H9v-3H7a2 2 0 01-2-2v-2H2v-2h3v-2H2v-2h3V7a2 2 0 012-2h2V2zm0 7v6h6V9H9z" fill="currentColor"/></symbol>
+    <symbol id="icon-arrow-down" viewBox="0 0 24 24"><path d="M12 20l-6-6 1.4-1.4L11 16.2V4h2v12.2l3.6-3.6L18 14l-6 6z" fill="currentColor"/></symbol>
+    <symbol id="icon-arrow-up" viewBox="0 0 24 24"><path d="M12 4l6 6-1.4 1.4L13 7.8V20h-2V7.8l-3.6 3.6L6 10l6-6z" fill="currentColor"/></symbol>
+    <symbol id="icon-laptop" viewBox="0 0 24 24"><path d="M4 5h16a1 1 0 011 1v10h-2V7H5v9H3V6a1 1 0 011-1zM1 18h22v2H1v-2z" fill="currentColor"/></symbol>
+    <symbol id="icon-phone" viewBox="0 0 24 24"><path d="M7 2h10a2 2 0 012 2v16a2 2 0 01-2 2H7a2 2 0 01-2-2V4a2 2 0 012-2zm0 4v12h10V6H7z" fill="currentColor"/></symbol>
+    <symbol id="icon-tv" viewBox="0 0 24 24"><path d="M3 4h18a1 1 0 011 1v12a1 1 0 01-1 1h-7v2h3v2H7v-2h3v-2H3a1 1 0 01-1-1V5a1 1 0 011-1zm1 2v10h16V6H4z" fill="currentColor"/></symbol>
+    <symbol id="icon-usb" viewBox="0 0 24 24"><path d="M12 1l3 4h-2v9.6l3-1.8V10h-1V7h3v3h-1v3.9l-4 2.4V18a2.5 2.5 0 11-2 0v-2.3l-4-2.4V10a2 2 0 112 0v2.1l2 1.2V5H9l3-4z" fill="currentColor"/></symbol>
+    <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="M8.6 9l3.4 3.4L15.4 9 17 10.6l-5 5-5-5L8.6 9z" fill="currentColor"/></symbol>
+    <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="currentColor"/><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M20.7 14.9A8.8 8.8 0 019.1 3.3 9 9 0 1020.7 15z" fill="currentColor"/></symbol>
+  </svg>
+
+  <div class="app">
+
+    <!-- ================= 侧边栏（LuCI 管理菜单树的镜像） ================= -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar__brand">
+        <div class="sidebar__logo">
+          <svg class="icon"><use href="#icon-wifi"/></svg>
+        </div>
+        <span class="sidebar__brand-text">OpenWrt</span>
+      </div>
+
+      <nav class="sidebar__nav">
+
+        <!-- 状态 -->
+        <div class="sidebar__group sidebar__group--open">
+          <button class="sidebar__item sidebar__item--active sidebar__item--toggle" type="button">
+            <svg class="icon"><use href="#icon-dashboard"/></svg>
+            <span class="sidebar__label">状态</span>
+            <svg class="icon sidebar__chevron"><use href="#icon-chevron"/></svg>
+          </button>
+          <div class="sidebar__submenu">
+            <a href="#" class="sidebar__subitem sidebar__subitem--active" data-page="概览">概览</a>
+            <a href="#" class="sidebar__subitem" data-page="防火墙">防火墙</a>
+            <a href="#" class="sidebar__subitem" data-page="路由">路由</a>
+            <a href="#" class="sidebar__subitem" data-page="系统日志">系统日志</a>
+            <a href="#" class="sidebar__subitem" data-page="进程">进程</a>
+            <a href="#" class="sidebar__subitem" data-page="实时图表">实时图表</a>
+          </div>
+        </div>
+
+        <!-- 系统 -->
+        <div class="sidebar__group">
+          <button class="sidebar__item sidebar__item--toggle" type="button">
+            <svg class="icon"><use href="#icon-settings"/></svg>
+            <span class="sidebar__label">系统</span>
+            <svg class="icon sidebar__chevron"><use href="#icon-chevron"/></svg>
+          </button>
+          <div class="sidebar__submenu">
+            <a href="#" class="sidebar__subitem" data-page="系统">系统</a>
+            <a href="#" class="sidebar__subitem" data-page="管理">管理</a>
+            <a href="#" class="sidebar__subitem" data-page="软件包">软件包</a>
+            <a href="#" class="sidebar__subitem" data-page="启动项">启动项</a>
+            <a href="#" class="sidebar__subitem" data-page="备份/升级">备份/升级</a>
+            <a href="#" class="sidebar__subitem" data-page="重启">重启</a>
+          </div>
+        </div>
+
+        <!-- 网络 -->
+        <div class="sidebar__group">
+          <button class="sidebar__item sidebar__item--toggle" type="button">
+            <svg class="icon"><use href="#icon-globe"/></svg>
+            <span class="sidebar__label">网络</span>
+            <svg class="icon sidebar__chevron"><use href="#icon-chevron"/></svg>
+          </button>
+          <div class="sidebar__submenu">
+            <a href="settings.html" class="sidebar__subitem">接口</a>
+            <a href="#" class="sidebar__subitem" data-page="无线">无线</a>
+            <a href="#" class="sidebar__subitem" data-page="DHCP/DNS">DHCP/DNS</a>
+            <a href="#" class="sidebar__subitem" data-page="诊断">诊断</a>
+            <a href="#" class="sidebar__subitem" data-page="防火墙">防火墙</a>
+          </div>
+        </div>
+
+        <!-- 服务 -->
+        <div class="sidebar__group">
+          <button class="sidebar__item sidebar__item--toggle" type="button">
+            <svg class="icon"><use href="#icon-layers"/></svg>
+            <span class="sidebar__label">服务</span>
+            <svg class="icon sidebar__chevron"><use href="#icon-chevron"/></svg>
+          </button>
+          <div class="sidebar__submenu">
+            <a href="#" class="sidebar__subitem" data-page="动态 DNS">动态 DNS</a>
+            <a href="#" class="sidebar__subitem" data-page="UPnP">UPnP IGD 和 PCP</a>
+            <a href="#" class="sidebar__subitem" data-page="网络共享">网络共享</a>
+          </div>
+        </div>
+
+      </nav>
+
+      <div class="sidebar__footer">
+        <a href="login.html" class="sidebar__item sidebar__item--danger">
+          <svg class="icon"><use href="#icon-power"/></svg>
+          <span class="sidebar__label">退出</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- 移动端侧边栏背后的遮罩层 -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- ================= 主区域 ================= -->
+    <div class="main">
+
+      <!-- Header -->
+      <header class="header">
+        <div class="header__left">
+          <button class="header__btn" id="sidebar-toggle" aria-label="打开/关闭菜单">
+            <svg class="icon"><use href="#icon-menu"/></svg>
+          </button>
+          <h1 class="header__title" id="page-title">概览</h1>
+        </div>
+
+        <div class="header__right">
+          <div class="header__status">
+            <span class="status-dot status-dot--online"></span>
+            <span class="header__status-text">互联网已连接</span>
+          </div>
+
+          <button class="header__btn" id="theme-toggle" aria-label="切换主题">
+            <svg class="icon header__theme-icon--light"><use href="#icon-moon"/></svg>
+            <svg class="icon header__theme-icon--dark"><use href="#icon-sun"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- 主内容 -->
+      <main class="content">
+
+        <!-- 顶部行：概览统计卡片 -->
+        <section class="grid grid--stats">
+
+          <div class="card stat">
+            <div class="stat__icon stat__icon--blue">
+              <svg class="icon"><use href="#icon-globe"/></svg>
+            </div>
+            <div class="stat__body">
+              <span class="stat__label">WAN 状态</span>
+              <span class="stat__value">已连接</span>
+              <span class="stat__meta">eth1 · PPPoE · 88.230.14.52</span>
+            </div>
+            <span class="status-dot status-dot--online stat__indicator"></span>
+          </div>
+
+          <div class="card stat">
+            <div class="stat__icon stat__icon--green">
+              <svg class="icon"><use href="#icon-arrow-down"/></svg>
+            </div>
+            <div class="stat__body">
+              <span class="stat__label">下载</span>
+              <span class="stat__value"><span id="stat-download">86.4</span> <small>Mbps</small></span>
+              <span class="stat__meta">总计: 42.7 GB（今日）</span>
+            </div>
+          </div>
+
+          <div class="card stat">
+            <div class="stat__icon stat__icon--orange">
+              <svg class="icon"><use href="#icon-arrow-up"/></svg>
+            </div>
+            <div class="stat__body">
+              <span class="stat__label">上传</span>
+              <span class="stat__value"><span id="stat-upload">12.8</span> <small>Mbps</small></span>
+              <span class="stat__meta">总计: 6.1 GB（今日）</span>
+            </div>
+          </div>
+
+          <div class="card stat">
+            <div class="stat__icon stat__icon--purple">
+              <svg class="icon"><use href="#icon-wifi"/></svg>
+            </div>
+            <div class="stat__body">
+              <span class="stat__label">无线客户端</span>
+              <span class="stat__value">8</span>
+              <span class="stat__meta">5 × 5 GHz · 3 × 2.4 GHz</span>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- 中间行：流量图 + 系统信息 -->
+        <section class="grid grid--main">
+
+          <div class="card">
+            <div class="card__header">
+              <h2 class="card__title">实时流量 — eth1（WAN）</h2>
+              <div class="card__actions">
+                <span class="legend"><i class="legend__dot legend__dot--down"></i>下载</span>
+                <span class="legend"><i class="legend__dot legend__dot--up"></i>上传</span>
+              </div>
+            </div>
+            <div class="card__body">
+              <canvas id="traffic-chart" class="chart" height="400"></canvas>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card__header">
+              <h2 class="card__title">系统</h2>
+              <svg class="icon card__header-icon"><use href="#icon-cpu"/></svg>
+            </div>
+            <div class="card__body">
+
+              <div class="meter">
+                <div class="meter__head">
+                  <span class="meter__label">CPU 负载</span>
+                  <span class="meter__value" id="cpu-value">34%</span>
+                </div>
+                <div class="progress">
+                  <div class="progress__bar progress__bar--blue" id="cpu-bar" style="width:34%"></div>
+                </div>
+              </div>
+
+              <div class="meter">
+                <div class="meter__head">
+                  <span class="meter__label">内存（RAM）</span>
+                  <span class="meter__value" id="ram-value">61%</span>
+                </div>
+                <div class="progress">
+                  <div class="progress__bar progress__bar--green" id="ram-bar" style="width:61%"></div>
+                </div>
+              </div>
+
+              <div class="meter">
+                <div class="meter__head">
+                  <span class="meter__label">存储（overlay）</span>
+                  <span class="meter__value">38%</span>
+                </div>
+                <div class="progress">
+                  <div class="progress__bar progress__bar--orange" style="width:38%"></div>
+                </div>
+              </div>
+
+              <ul class="info-list">
+                <li class="info-list__item"><span>主机名</span><strong>OpenWrt</strong></li>
+                <li class="info-list__item"><span>型号</span><strong>GL.iNet GL-MT6000</strong></li>
+                <li class="info-list__item"><span>架构</span><strong>ARMv8 Cortex-A53</strong></li>
+                <li class="info-list__item"><span>固件版本</span><strong>OpenWrt 25.12.5</strong></li>
+                <li class="info-list__item"><span>内核版本</span><strong>6.6.86</strong></li>
+                <li class="info-list__item"><span>运行时间</span><strong id="uptime">14 天 06:42:18</strong></li>
+                <li class="info-list__item"><span>平均负载</span><strong>0.42 / 0.31 / 0.24</strong></li>
+              </ul>
+
+            </div>
+          </div>
+
+        </section>
+
+        <!-- 底部行：DHCP 租约 + 无线网络 -->
+        <section class="grid grid--bottom">
+
+          <div class="card">
+            <div class="card__header">
+              <h2 class="card__title">活跃 DHCP 租约</h2>
+              <a href="#" class="card__link">查看全部</a>
+            </div>
+            <div class="card__body card__body--flush">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>主机名</th>
+                    <th>IPv4 地址</th>
+                    <th>MAC 地址</th>
+                    <th class="table__col--right">剩余时间</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="device">
+                        <div class="device__icon"><svg class="icon"><use href="#icon-laptop"/></svg></div>
+                        <div class="device__info">
+                          <span class="device__name">macbook-pro</span>
+                          <span class="device__mac">Wi-Fi 5 GHz</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>192.168.1.34</td>
+                    <td><span class="device__mac">A4:83:E7:2C:11:9F</span></td>
+                    <td class="table__col--right">11 时 23 分</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="device">
+                        <div class="device__icon"><svg class="icon"><use href="#icon-phone"/></svg></div>
+                        <div class="device__info">
+                          <span class="device__name">iphone-15</span>
+                          <span class="device__mac">Wi-Fi 5 GHz</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>192.168.1.41</td>
+                    <td><span class="device__mac">F0:98:9D:6A:B2:04</span></td>
+                    <td class="table__col--right">9 时 02 分</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="device">
+                        <div class="device__icon"><svg class="icon"><use href="#icon-tv"/></svg></div>
+                        <div class="device__info">
+                          <span class="device__name">samsung-tv</span>
+                          <span class="device__mac">Ethernet · lan2</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>192.168.1.18</td>
+                    <td><span class="device__mac">8C:79:F5:D1:40:E8</span></td>
+                    <td class="table__col--right">6 时 47 分</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="device">
+                        <div class="device__icon"><svg class="icon"><use href="#icon-usb"/></svg></div>
+                        <div class="device__info">
+                          <span class="device__name">nas</span>
+                          <span class="device__mac">Ethernet · lan1</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>192.168.1.10</td>
+                    <td><span class="device__mac">00:11:32:8F:5C:21</span></td>
+                    <td class="table__col--right">静态</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card__header">
+              <h2 class="card__title">无线</h2>
+              <a href="#" class="card__link">配置</a>
+            </div>
+            <div class="card__body">
+
+              <div class="wifi">
+                <div class="wifi__head">
+                  <div class="wifi__icon wifi__icon--active">
+                    <svg class="icon"><use href="#icon-wifi"/></svg>
+                  </div>
+                  <div class="wifi__meta">
+                    <span class="wifi__ssid">OpenWrt_5G</span>
+                    <span class="wifi__band">radio0 · 5 GHz · 信道 36 · WPA3-SAE</span>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" class="switch__input" checked>
+                    <span class="switch__slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="wifi">
+                <div class="wifi__head">
+                  <div class="wifi__icon wifi__icon--active">
+                    <svg class="icon"><use href="#icon-wifi"/></svg>
+                  </div>
+                  <div class="wifi__meta">
+                    <span class="wifi__ssid">OpenWrt</span>
+                    <span class="wifi__band">radio1 · 2.4 GHz · 信道 6 · WPA2/WPA3</span>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" class="switch__input" checked>
+                    <span class="switch__slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="wifi">
+                <div class="wifi__head">
+                  <div class="wifi__icon">
+                    <svg class="icon"><use href="#icon-wifi"/></svg>
+                  </div>
+                  <div class="wifi__meta">
+                    <span class="wifi__ssid">OpenWrt_Guest</span>
+                    <span class="wifi__band">radio1 · 2.4 GHz · 隔离访客网络</span>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" class="switch__input">
+                    <span class="switch__slider"></span>
+                  </label>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </section>
+
+      </main>
+
+      <!-- 页脚（LuCI 主题页脚的镜像） -->
+      <footer class="page-footer">
+        <span>
+          Powered by <a href="https://github.com/openwrt/luci">LuCI</a> (git-26.180.42647) /
+          <a href="https://openwrt.org">OpenWrt 25.12.5</a> (r28912) /
+          <a href="https://github.com/dursuntokgoz/luci-theme-gokce">Goflow 主题</a>
+        </span>
+      </footer>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

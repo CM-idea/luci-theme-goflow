@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>接口 — Goflow 主题演示</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    (function () {
+      var forced = new URLSearchParams(location.search).get("theme");
+      var saved = null;
+      try { saved = localStorage.getItem("theme"); } catch (e) {}
+      var theme = forced || saved ||
+        (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+</head>
+<body>
+
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <symbol id="icon-menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></symbol>
+    <symbol id="icon-dashboard" viewBox="0 0 24 24"><path d="M4 13h6V4H4v9zm0 7h6v-5H4v5zm10 0h6v-9h-6v9zm0-16v5h6V4h-6z" fill="currentColor"/></symbol>
+    <symbol id="icon-globe" viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 2c1.9 0 3.6 2.9 3.9 7H8.1c.3-4.1 2-7 3.9-7zm-5.9 7H4.1a8 8 0 014.6-6.3A13.6 13.6 0 006.1 11zm0 2a13.6 13.6 0 002.6 6.3A8 8 0 014.1 13h2zm2 0h7.8c-.3 4.1-2 7-3.9 7s-3.6-2.9-3.9-7zm9.8 0h2a8 8 0 01-4.6 6.3 13.6 13.6 0 002.6-6.3zm0-2a13.6 13.6 0 00-2.6-6.3A8 8 0 0119.9 11h-2z" fill="currentColor"/></symbol>
+    <symbol id="icon-wifi" viewBox="0 0 24 24"><path d="M12 20a1.8 1.8 0 110-3.6 1.8 1.8 0 010 3.6zm-4.2-5.2l1.6 1.6a3.7 3.7 0 015.2 0l1.6-1.6a6 6 0 00-8.4 0zm-3.2-3.2l1.6 1.6a8.2 8.2 0 0111.6 0l1.6-1.6a10.5 10.5 0 00-14.8 0zM1.4 8.4L3 10a12.7 12.7 0 0118 0l1.6-1.6a15 15 0 00-21.2 0z" fill="currentColor"/></symbol>
+    <symbol id="icon-layers" viewBox="0 0 24 24"><path d="M12 2l9 5-9 5-9-5 9-5zm-9 8.5L12 15l9-4.5v3L12 18l-9-4.5v-3zm0 5L12 20l9-4.5v3L12 23l-9-4.5v-3z" fill="currentColor"/></symbol>
+    <symbol id="icon-settings" viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 1112 8.5a3.5 3.5 0 010 7zm7.4-2.6c.05-.3.1-.6.1-.9s-.05-.6-.1-.9l2-1.6a.5.5 0 00.1-.6l-1.9-3.3a.5.5 0 00-.6-.2l-2.4 1a7 7 0 00-1.6-.9l-.4-2.6a.5.5 0 00-.5-.4h-3.8a.5.5 0 00-.5.4l-.4 2.6a7 7 0 00-1.6.9l-2.4-1a.5.5 0 00-.6.2L2.9 8.9a.5.5 0 00.1.6l2 1.6c-.05.3-.1.6-.1.9s.05.6.1.9l-2 1.6a.5.5 0 00-.1.6l1.9 3.3c.1.2.4.3.6.2l2.4-1c.5.4 1 .7 1.6.9l.4 2.6c0 .2.2.4.5.4h3.8c.3 0 .5-.2.5-.4l.4-2.6a7 7 0 001.6-.9l2.4 1c.2.1.5 0 .6-.2l1.9-3.3a.5.5 0 00-.1-.6l-2-1.6z" fill="currentColor"/></symbol>
+    <symbol id="icon-power" viewBox="0 0 24 24"><path d="M11 3h2v10h-2V3zm6.4 2.6l-1.4 1.5A7 7 0 1112 19a7 7 0 01-4-12.9L6.6 4.6a9 9 0 1010.8 1z" fill="currentColor"/></symbol>
+    <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="M8.6 9l3.4 3.4L15.4 9 17 10.6l-5 5-5-5L8.6 9z" fill="currentColor"/></symbol>
+    <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="currentColor"/><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M20.7 14.9A8.8 8.8 0 019.1 3.3 9 9 0 1020.7 15z" fill="currentColor"/></symbol>
+    <symbol id="icon-laptop" viewBox="0 0 24 24"><path d="M4 5h16a1 1 0 011 1v10h-2V7H5v9H3V6a1 1 0 011-1zM1 18h22v2H1v-2z" fill="currentColor"/></symbol>
+    <symbol id="icon-phone" viewBox="0 0 24 24"><path d="M7 2h10a2 2 0 012 2v16a2 2 0 01-2 2H7a2 2 0 01-2-2V4a2 2 0 012-2zm0 4v12h10V6H7z" fill="currentColor"/></symbol>
+  </svg>
+
+  <div class="app">
+
+    <!-- 侧边栏（网络组展开，接口选中） -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar__brand">
+        <div class="sidebar__logo"><svg class="icon"><use href="#icon-wifi"/></svg></div>
+        <span class="sidebar__brand-text">OpenWrt</span>
+      </div>
+
+      <nav class="sidebar__nav">
+        <div class="sidebar__group">
+          <button class="sidebar__item sidebar__item--toggle" type="button">
+            <svg class="icon"><use href="#icon-dashboard"/></svg>
+            <span class="sidebar__label">状态</span>
+            <svg class="icon sidebar__chevron"><use href="#icon-chevron"/></svg>
+          </button>
+          <div class="sidebar__submenu">
+            <a href="index.html" class="sidebar__subitem">概览</a>
+            <a href="#" class="sidebar__subitem" data-page="防火墙">防火墙</a>
+            <a href="#" class="sidebar__subitem" data-page="系统日志">系统日志</a>
+          </div>
+        </div>
+
+        <div class="sidebar__group">
+          <button class="sidebar__item sidebar__item--toggle" type="button">
+            <svg class="icon"><use href="#icon-settings"/></svg>
+            <span class="sidebar__label">系统</span>
+            <svg class="icon sidebar__chevron"><use href="#icon-chevron"/></svg>
+          </button>
+          <div class="sidebar__submenu">
+            <a href="#" class="sidebar__subitem" data-page="系统">系统</a>
+            <a href="#" class="sidebar__subitem" data-page="管理">管理</a>
+            <a href="#" class="sidebar__subitem" data-page="软件包">软件包</a>
+          </div>
+        </div>
+
+        <div class="sidebar__group sidebar__group--open">
+          <button class="sidebar__item sidebar__item--active sidebar__item--toggle" type="button">
+            <svg class="icon"><use href="#icon-globe"/></svg>
+            <span class="sidebar__label">网络</span>
+            <svg class="icon sidebar__chevron"><use href="#icon-chevron"/></svg>
+          </button>
+          <div class="sidebar__submenu">
+            <a href="#" class="sidebar__subitem sidebar__subitem--active">接口</a>
+            <a href="#" class="sidebar__subitem" data-page="无线">无线</a>
+            <a href="#" class="sidebar__subitem" data-page="DHCP/DNS">DHCP/DNS</a>
+            <a href="#" class="sidebar__subitem" data-page="诊断">诊断</a>
+            <a href="#" class="sidebar__subitem" data-page="防火墙">防火墙</a>
+          </div>
+        </div>
+
+        <div class="sidebar__group">
+          <button class="sidebar__item sidebar__item--toggle" type="button">
+            <svg class="icon"><use href="#icon-layers"/></svg>
+            <span class="sidebar__label">服务</span>
+            <svg class="icon sidebar__chevron"><use href="#icon-chevron"/></svg>
+          </button>
+          <div class="sidebar__submenu">
+            <a href="#" class="sidebar__subitem" data-page="动态 DNS">动态 DNS</a>
+            <a href="#" class="sidebar__subitem" data-page="UPnP">UPnP IGD 和 PCP</a>
+          </div>
+        </div>
+      </nav>
+
+      <div class="sidebar__footer">
+        <a href="login.html" class="sidebar__item sidebar__item--danger">
+          <svg class="icon"><use href="#icon-power"/></svg>
+          <span class="sidebar__label">退出</span>
+        </a>
+      </div>
+    </aside>
+
+    <div class="overlay" id="overlay"></div>
+
+    <div class="main">
+      <header class="header">
+        <div class="header__left">
+          <button class="header__btn" id="sidebar-toggle" aria-label="打开/关闭菜单">
+            <svg class="icon"><use href="#icon-menu"/></svg>
+          </button>
+          <h1 class="header__title" id="page-title">接口</h1>
+        </div>
+        <div class="header__right">
+          <div class="header__status">
+            <span class="status-dot status-dot--online"></span>
+            <span class="header__status-text">互联网已连接</span>
+          </div>
+          <button class="header__btn" id="theme-toggle" aria-label="切换主题">
+            <svg class="icon header__theme-icon--light"><use href="#icon-moon"/></svg>
+            <svg class="icon header__theme-icon--dark"><use href="#icon-sun"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="content">
+        <form class="cbi-map" onsubmit="return false">
+          <h2>接口 » LAN</h2>
+          <div class="cbi-map-descr">
+            您可以在此编辑 br-lan 接口的配置。
+          </div>
+
+          <div class="alert-message warning">
+            <span>⚠</span>
+            <span><strong>有未保存的更改。</strong>请使用页面底部的
+            <em>保存并应用</em> 按钮来应用更改。</span>
+          </div>
+
+          <ul class="tabs">
+            <li><a href="#" class="active">基本设置</a></li>
+            <li><a href="#">高级设置</a></li>
+            <li><a href="#">物理设置</a></li>
+            <li><a href="#">防火墙设置</a></li>
+            <li><a href="#">DHCP 服务器</a></li>
+          </ul>
+
+          <div class="cbi-section">
+            <h3>基本设置</h3>
+
+            <div class="cbi-value">
+              <label class="cbi-value-title" for="proto">协议</label>
+              <div class="cbi-value-field">
+                <select id="proto">
+                  <option>静态地址</option>
+                  <option>DHCP 客户端</option>
+                  <option>PPPoE</option>
+                  <option>非桥接</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="cbi-value">
+              <label class="cbi-value-title" for="ipaddr">IPv4 地址</label>
+              <div class="cbi-value-field">
+                <input class="cbi-input-text" id="ipaddr" type="text" value="192.168.1.1">
+              </div>
+            </div>
+
+            <div class="cbi-value">
+              <label class="cbi-value-title" for="netmask">IPv4 子网掩码</label>
+              <div class="cbi-value-field">
+                <select id="netmask">
+                  <option>255.255.255.0</option>
+                  <option>255.255.0.0</option>
+                  <option>255.0.0.0</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="cbi-value">
+              <label class="cbi-value-title" for="gw">IPv4 网关</label>
+              <div class="cbi-value-field">
+                <input class="cbi-input-text" id="gw" type="text" placeholder="（未分配）">
+                <div class="cbi-value-description">留空则不使用默认网关。</div>
+              </div>
+            </div>
+
+            <div class="cbi-value">
+              <label class="cbi-value-title" for="dns">DNS 服务器</label>
+              <div class="cbi-value-field">
+                <input class="cbi-input-text" id="dns" type="text" value="1.1.1.1 8.8.8.8">
+              </div>
+            </div>
+
+            <div class="cbi-value">
+              <label class="cbi-value-title" for="bringup">开机自启</label>
+              <div class="cbi-value-field">
+                <input class="cbi-checkbox" id="bringup" type="checkbox" checked>
+                <span class="cbi-input-desc">系统启动时自动启用此接口</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="cbi-section">
+            <h3>静态 DHCP 租约</h3>
+            <div class="cbi-section-descr">
+              添加租约为指定 MAC 地址分配固定 IP。
+            </div>
+
+            <div class="table">
+              <div class="tr">
+                <div class="th">主机名</div>
+                <div class="th">MAC 地址</div>
+                <div class="th">IPv4 地址</div>
+                <div class="th table__col--right">操作</div>
+              </div>
+              <div class="tr">
+                <div class="td">
+                  <div class="device">
+                    <div class="device__icon"><svg class="icon"><use href="#icon-laptop"/></svg></div>
+                    <div class="device__info"><span class="device__name">macbook-pro</span></div>
+                  </div>
+                </div>
+                <div class="td"><span class="device__mac">A4:83:E7:2C:11:9F</span></div>
+                <div class="td">192.168.1.34</div>
+                <div class="td table__col--right"><button class="btn small">删除</button></div>
+              </div>
+              <div class="tr">
+                <div class="td">
+                  <div class="device">
+                    <div class="device__icon"><svg class="icon"><use href="#icon-phone"/></svg></div>
+                    <div class="device__info"><span class="device__name">iphone-15</span></div>
+                  </div>
+                </div>
+                <div class="td"><span class="device__mac">F0:98:9D:6A:B2:04</span></div>
+                <div class="td">192.168.1.41</div>
+                <div class="td table__col--right"><button class="btn small">删除</button></div>
+              </div>
+            </div>
+
+            <div style="margin-top:16px">
+              <button class="btn cbi-button-save">+ 添加租约</button>
+            </div>
+          </div>
+
+          <div class="cbi-page-actions">
+            <button class="btn cbi-button-reset">重置</button>
+            <button class="btn cbi-button-save">保存</button>
+            <button class="btn cbi-button-apply">保存并应用</button>
+          </div>
+        </form>
+      </main>
+
+      <footer class="page-footer">
+        <span>
+          Powered by <a href="https://github.com/openwrt/luci">LuCI</a> (git-26.180.42647) /
+          <a href="https://openwrt.org">OpenWrt 25.12.5</a> (r28912) /
+          <a href="https://github.com/dursuntokgoz/luci-theme-gokce">Goflow 主题</a>
+        </span>
+      </footer>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

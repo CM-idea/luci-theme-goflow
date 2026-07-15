@@ -1,0 +1,32 @@
+{#
+ Copyright 2026 Dursun Tokgoz
+ Licensed to the public under the Apache License 2.0.
+
+ Structurally based on themes/luci-theme-bootstrap/ucode/template/themes/bootstrap/footer.ut
+ (LuCI project, Apache-2.0).
+-#}
+
+		{% if (!blank_page): %}
+				</div><!-- /#maincontent.container -->
+			</div><!-- /.main -->
+		</div><!-- /.app -->
+
+		<footer class="footer">
+			<span>
+				Powered by
+				<a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">
+					{{ version.luciname }} ({{ version.luciversion }})</a>
+				/
+				<a href="{{ entityencode(version.disturl ?? '#', true) }}" target="_blank" rel="noreferrer">
+					{{ version.distname }} {{ version.distversion }} ({{ version.distrevision }})</a>
+				{% if (lua_active): %}
+					/ {{ _('Lua compatibility mode active') }}
+				{% endif %}
+				/ <a href="https://github.com/dursuntokgoz/luci-theme-gokce" target="_blank" rel="noreferrer">Goflow Theme</a>
+			</span>
+			<ul class="breadcrumb" id="modemenu" style="display:none"></ul>
+		</footer>
+		<script>L.require('menu-goflow')</script>
+		{% endif %}
+	</body>
+</html>

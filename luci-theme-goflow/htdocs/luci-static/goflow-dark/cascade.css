@@ -1,0 +1,4 @@
+/* Same stylesheet as the Goflow theme - this variant only exists so LuCI's
+   dark/light theme entries resolve to a distinct mediaurlbase basename,
+   which header.ut uses to pick the correct initial data-darkmode value. */
+@import url("../goflow/cascade.css");

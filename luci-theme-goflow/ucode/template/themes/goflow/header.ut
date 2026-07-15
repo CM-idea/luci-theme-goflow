@@ -1,0 +1,143 @@
+{#
+ Copyright 2026 Dursun Tokgoz
+ Licensed to the public under the Apache License 2.0.
+
+ Structurally based on themes/luci-theme-bootstrap/ucode/template/themes/bootstrap/header.ut
+ (LuCI project, Apache-2.0) - replaces the top dropdown nav with a collapsible
+ left sidebar; #tabmenu / #modemenu / #indicators keep their original meaning
+ and DOM ids so core and third-party luci-app-* JS keeps working unmodified.
+-#}
+
+{%
+	import { getuid, getspnam } from 'luci.core';
+
+	const boardinfo = ubus.call('system', 'board') ?? {};
+	const darkpref = (theme == 'goflow-dark' ? 'true' : (theme == 'goflow-light' ? 'false' : null));
+
+	http.prepare_content('text/html; charset=UTF-8');
+-%}
+
+<!DOCTYPE html>
+<html lang="{{ dispatcher.lang }}" {{ darkpref ? `data-darkmode="${darkpref}"` : '' }}>
+	<head>
+		<meta charset="utf-8">
+		<title>{{ striptags(`${boardinfo.hostname ?? '?'}${dispatched?.title ? ` | ${_(dispatched.title)}` : ''}`) }}</title>
+		{% if (!darkpref): %}
+			<script>
+				(function () {
+					var root = document.documentElement;
+					var STORE_KEY = 'goflow-darkmode';
+					var stored = null;
+
+					try { stored = localStorage.getItem(STORE_KEY); } catch (e) {}
+
+					function apply(isDark) {
+						root.setAttribute('data-darkmode', isDark ? 'true' : 'false');
+					}
+
+					if (stored !== null) {
+						apply(stored === 'true');
+					} else {
+						var mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+						apply(mediaQuery.matches);
+						mediaQuery.addEventListener('change', function (e) {
+							var override = null;
+							try { override = localStorage.getItem(STORE_KEY); } catch (e2) {}
+							if (override === null) apply(e.matches);
+						});
+					}
+				})();
+			</script>
+		{% endif %}
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="darkreader-lock">
+		<link rel="stylesheet" href="{{ media }}/cascade.css">
+		<link rel="icon" href="/luci-static/goflow/logo.svg" sizes="any">
+		{% if (node?.css): %}
+		<link rel="stylesheet" href="{{ resource }}/{{ node.css }}">
+		{% endif %}
+		{% if (css): %}
+		<style title="text/css">{{ css }}</style>
+		{% endif %}
+		<script src="{{ dispatcher.build_url('admin/translations', dispatcher.lang) }}"></script>
+		<script src="{{ resource }}/cbi.js"></script>
+	</head>
+
+	<body class="lang_{{ dispatcher.lang }} {{ entityencode(striptags(node?.title ?? ''), true) }}" data-page="{{ entityencode(join('-', length(ctx.request_path) ? ctx.request_path : ctx.path), true) }}">
+
+		<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+			<symbol id="goflow-icon-menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></symbol>
+			<symbol id="goflow-icon-dashboard" viewBox="0 0 24 24"><path d="M4 13h6V4H4v9zm0 7h6v-5H4v5zm10 0h6v-9h-6v9zm0-16v5h6V4h-6z" fill="currentColor"/></symbol>
+			<symbol id="goflow-icon-settings" viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 1112 8.5a3.5 3.5 0 010 7zm7.4-2.6c.05-.3.1-.6.1-.9s-.05-.6-.1-.9l2-1.6a.5.5 0 00.1-.6l-1.9-3.3a.5.5 0 00-.6-.2l-2.4 1a7 7 0 00-1.6-.9l-.4-2.6a.5.5 0 00-.5-.4h-3.8a.5.5 0 00-.5.4l-.4 2.6a7 7 0 00-1.6.9l-2.4-1a.5.5 0 00-.6.2L2.9 8.9a.5.5 0 00.1.6l2 1.6c-.05.3-.1.6-.1.9s.05.6.1.9l-2 1.6a.5.5 0 00-.1.6l1.9 3.3c.1.2.4.3.6.2l2.4-1c.5.4 1 .7 1.6.9l.4 2.6c0 .2.2.4.5.4h3.8c.3 0 .5-.2.5-.4l.4-2.6a7 7 0 001.6-.9l2.4 1c.2.1.5 0 .6-.2l1.9-3.3a.5.5 0 00-.1-.6l-2-1.6z" fill="currentColor"/></symbol>
+			<symbol id="goflow-icon-globe" viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 2c1.9 0 3.6 2.9 3.9 7H8.1c.3-4.1 2-7 3.9-7zm-5.9 7H4.1a8 8 0 014.6-6.3A13.6 13.6 0 006.1 11zm0 2a13.6 13.6 0 002.6 6.3A8 8 0 014.1 13h2zm2 0h7.8c-.3 4.1-2 7-3.9 7s-3.6-2.9-3.9-7zm9.8 0h2a8 8 0 01-4.6 6.3 13.6 13.6 0 002.6-6.3zm0-2a13.6 13.6 0 00-2.6-6.3A8 8 0 0119.9 11h-2z" fill="currentColor"/></symbol>
+			<symbol id="goflow-icon-layers" viewBox="0 0 24 24"><path d="M12 2l9 5-9 5-9-5 9-5zm-9 8.5L12 15l9-4.5v3L12 18l-9-4.5v-3zm0 5L12 20l9-4.5v3L12 23l-9-4.5v-3z" fill="currentColor"/></symbol>
+			<symbol id="goflow-icon-shield" viewBox="0 0 24 24"><path d="M12 2l8 3v6c0 5-3.4 9.4-8 11-4.6-1.6-8-6-8-11V5l8-3zm-1 13.5l6-6-1.4-1.4L11 12.7 9.4 11 8 12.4l3 3.1z" fill="currentColor"/></symbol>
+			<symbol id="goflow-icon-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="currentColor"/></symbol>
+			<symbol id="goflow-icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="currentColor"/><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+			<symbol id="goflow-icon-moon" viewBox="0 0 24 24"><path d="M20.7 14.9A8.8 8.8 0 019.1 3.3 9 9 0 1020.7 15z" fill="currentColor"/></symbol>
+			<symbol id="goflow-icon-chevron" viewBox="0 0 24 24"><path d="M8.6 9l3.4 3.4L15.4 9 17 10.6l-5 5-5-5L8.6 9z" fill="currentColor"/></symbol>
+		</svg>
+
+		{% if (!blank_page): %}
+		<div class="app" id="goflow-app">
+			<aside class="sidebar" id="goflow-sidebar">
+				<div class="sidebar__brand">
+					<a class="sidebar__brand-link" href="/">
+						<img class="sidebar__logo" src="/luci-static/goflow/logo.svg" alt="">
+						<span class="sidebar__brand-text">{{ striptags(boardinfo.hostname ?? '?') }}</span>
+					</a>
+				</div>
+				<nav class="sidebar__nav" id="sidebar-menu"></nav>
+			</aside>
+
+			<div class="overlay" id="goflow-overlay"></div>
+
+			<div class="main">
+				<header class="header">
+					<div class="header__left">
+						<button class="header__btn" id="goflow-sidebar-toggle" type="button" aria-label="{{ _('Toggle menu') }}">
+							<svg class="icon"><use href="#goflow-icon-menu"/></svg>
+						</button>
+						<h1 class="header__title">{{ striptags(dispatched?.title ? _(dispatched.title) : (boardinfo.hostname ?? 'Goflow')) }}</h1>
+					</div>
+					<div class="header__right">
+						<div id="indicators" class="header__indicators"></div>
+						{% if (!darkpref): %}
+						<button class="header__btn" id="goflow-theme-toggle" type="button" aria-label="{{ _('Toggle dark mode') }}">
+							<svg class="icon header__theme-icon--light"><use href="#goflow-icon-moon"/></svg>
+							<svg class="icon header__theme-icon--dark"><use href="#goflow-icon-sun"/></svg>
+						</button>
+						{% endif %}
+					</div>
+				</header>
+
+				<div id="maincontent" class="container">
+					{% if (getuid() == 0 && getspnam('root')?.pwdp === ''): %}
+						<div class="alert-message warning">
+							<h4>{{ _('No password set!') }}</h4>
+							<p>{{ _('There is no password set on this router. Please configure a root password to protect the web interface.') }}</p>
+							{% if (dispatcher.lookup("admin/system/admin")): %}
+							  <div class="right"><a class="btn" href="{{ dispatcher.build_url("admin/system/admin") }}">{{ _('Go to password configuration...') }}</a></div>
+							{% endif %}
+						</div>
+					{% endif %}
+
+					{% if (boardinfo.rootfs_type == "initramfs"): %}
+						<div class="alert-message warning">
+							<h4>{{ _('System running in recovery (initramfs) mode.') }}</h4>
+							<p>{{ _('No changes to settings will be stored and are lost after rebooting. This mode should only be used to install a firmware upgrade') }}</p>
+							{% if (dispatcher.lookup("admin/system/flash")): %}
+							  <div class="right"><a class="btn" href="{{ dispatcher.build_url("admin/system/flash") }}">{{ _('Go to firmware upgrade...') }}</a></div>
+							{% endif %}
+						</div>
+					{% endif %}
+
+					<noscript>
+						<div class="alert-message warning">
+							<h4>{{ _('JavaScript required!') }}</h4>
+							<p>{{ _('You must enable JavaScript in your browser or LuCI will not work properly.') }}</p>
+						</div>
+					</noscript>
+
+					<div id="tabmenu" style="display:none"></div>
+		{% endif %}
