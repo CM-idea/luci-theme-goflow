@@ -4,7 +4,6 @@
  Licensed under the Apache License 2.0.
 -#}
 
-{% const boardinfo = ubus.call('system', 'board'); -%}
 {% include('header', { blank_page: true }) %}
 
 <div class="login-screen" {% if (fuser): %}data-error="true"{% endif %}>
