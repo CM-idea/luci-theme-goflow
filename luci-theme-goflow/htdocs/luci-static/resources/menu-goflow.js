@@ -13,13 +13,13 @@ var ICONS = {
 	vpn: 'shield',
 	firewall: 'shield',
 	istore: 'istore',
-	'goflow-dashboard': 'dashboard',
+	index: 'dashboard',
 	'goflow-stations': 'chart',
 	logout: 'logout'
 };
 
 var ORDER = [
-	'goflow-dashboard',
+	'index',
 	'status',
 	'system',
 	'istore',

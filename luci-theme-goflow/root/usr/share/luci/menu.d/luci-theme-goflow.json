@@ -1,4 +1,15 @@
 {
+	"admin/index": {
+		"title": "首页",
+		"order": 0,
+		"action": {
+			"type": "view",
+			"path": "goflow/dashboard"
+		},
+		"depends": {
+			"acl": [ "luci-theme-goflow" ]
+		}
+	},
 	"admin/system/goflow": {
 		"title": "主题设置",
 		"order": 90,
@@ -9,23 +20,6 @@
 		"depends": {
 			"acl": [ "luci-theme-goflow" ],
 			"mediaurlbase": "/luci-static/goflow"
-		}
-	},
-	"admin/index": {
-		"action": {
-			"type": "alias",
-			"path": "admin/goflow-dashboard"
-		}
-	},
-	"admin/goflow-dashboard": {
-		"title": "主页",
-		"order": 0,
-		"action": {
-			"type": "view",
-			"path": "goflow/dashboard"
-		},
-		"depends": {
-			"acl": [ "luci-theme-goflow" ]
 		}
 	}
 }

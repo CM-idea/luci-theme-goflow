@@ -23,6 +23,7 @@ define Package/luci-theme-goflow/postrm
 	uci -q delete luci.themes.GoflowDark
 	uci -q delete luci.themes.GoflowLight
 	uci commit luci
+	rm -f /tmp/luci-indexcache /tmp/luci-modulecache 2>/dev/null
 }
 endef
 
